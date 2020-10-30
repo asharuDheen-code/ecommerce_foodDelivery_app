@@ -1,0 +1,60 @@
+<section>
+    <div class="container">
+        <div class="row mt-4">
+            <a href="/admin/add-users" class="btn btn-success ml-auto">Add user</a>
+        </div>
+        <a href="/admin/adminlogout"><button type="submit" class="btn btn-primary">log out</button></a>
+
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+        <table class="table table-dark mt-3" id="myTable">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    {{!-- <th scope="col">password</th> --}}
+                    {{!-- <th scope="col">Image</th> --}}
+                </tr>
+            </thead>
+            <tbody>
+                {{#each users}}
+                <tr>
+                    <th scope="row"> {{@index}} </th>
+                    <td>{{this.username}}</td>
+                    <td>{{this.email}}</td>
+                    {{!-- <td>{{this.password}}</td> --}}
+                    {{!-- <td><img style="width: 50px; heigth: 50px" src="/product-image/{{this._id}}.jpg" alt=""> </td> --}}
+                    <td>
+                        <a href="/admin/edit-users/{{this._id}}" class="btn btn-primary">Edit</a>
+                        <a href="/admin/delete-users?id={{this._id}}" class="btn btn-danger"
+                            onclick="return confirm('are you sure want delete {{this.name}} ?')">Delete</a>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+<script>
+    function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>

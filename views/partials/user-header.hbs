@@ -1,0 +1,44 @@
+<header>
+    {{#if user}}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">clouD-techI</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {{#if user}}
+                <li class="nav-item active">
+                    <a class="nav-link" href="/cart">Cart <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">orders</a>
+                </li>
+                {{/if}}
+            </ul>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{#if user}}
+                    {{user.username}}
+                    {{else}}
+                    Account
+                    {{/if}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {{#if user}}
+                    <a class="dropdown-item" href="/logout">logOut</a>
+                    {{else}}
+                    <a class="dropdown-item" href="/login">login</a>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </nav>
+    {{else}}
+    {{!-- <h1>not a user</h1> --}}
+   {{/if}}
+</header>
+

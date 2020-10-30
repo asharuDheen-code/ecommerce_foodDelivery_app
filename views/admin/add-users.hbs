@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <section>
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="text-center">Add user</h2>
+                    <form enctype="multipart/form-data">
+                        <label for="">Name</label>
+                        <input id="name" type="text" name="username" class="form-control">
+                        <label for="">Email</label>
+                        <input id="addemail" type="text" name="email" class="form-control">
+                        <label for="">Password</label>
+                        <input id="password" type="text" name="password" class="form-control">
+                        <div class="user-exist" style="display: none;">
+                            <p>user already-exist</p>
+                        </div>
+                        <div class="empty" style="display: none;">
+                            <p>please enter the details</p>
+                        </div>
+                        <button id="formsubmission" type="button" class="btn btn-success mt-4">submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        $("#formsubmission").click(function () {
+            if ($("#name").val() === "") {
+                $(".empty").css("display", "block");
+            }
+            else if ($("#addemail").val() === "") {
+                $(".empty").css("display", "block");
+            }
+            else if ($("#adduser").val() === "") {
+                $(".empty").css("display", "block");
+            } else {
+                $.post("/admin/add-users",
+                    {
+                        username: $('#name').val(),
+                        email: $("#addemail").val(),
+                        password: $('#password').val()
+                    },
+                    function (data, status) {
+                        console.log("Data: " + data + "\nStatus: " + status);
+
+                        if (data === 'success') {
+                            document.location.href = "http://localhost:3002/admin/view-users";
+                        } else if (data === 'already-exist') {
+                            $('.empty').css("display", "none");
+                            $('.user-exist').css("display", "block");
+
+                        }
+                    });
+            }
+
+        });
+    </script>
+</body>
+
+</html>
