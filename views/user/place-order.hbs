@@ -1,0 +1,232 @@
+<link rel="stylesheet" href="/stylesheets/place-order.css">
+<section class="" style="padding-top: 30px;">
+    <div class="container">
+        <div class="title">
+            <h2>Confirm Your Order</h2>
+        </div>
+        <div class="d-flex">
+            <form id="checkout-form">
+                <div class="main" style="display: flex;">
+                    <div class="formSection">
+                        <label>
+                            <span class="fname">First Name <span class="required">*</span></span>
+                            <input type="text" name="fname">
+                        </label>
+                        <label>
+                            <span class="lname">Last Name <span class="required">*</span></span>
+                            <input type="text" name="lname">
+                        </label>
+                        <label>
+                            <span>Street Address <span class="required">*</span></span>
+                            <input type="text" name="address" placeholder="street name" required>
+                        </label>
+                        <label>
+                            <span>Phone <span class="required">*</span></span>
+                            <input type="tel" name="mobile">
+                        </label>
+                        <label>
+                            <span>Email Address <span class="required">*</span></span>
+                            <input type="email" name="email">
+                            <input type="text" name="userId" value="{{user._id}}" hidden>
+                        </label>
+                    </div>
+                    <div class="Yorder">
+                        <table>
+                            <tr>
+                                <th colspan="2">Your order</th>
+                            </tr>
+                            <tr>
+                                <td>Product Name x 2(Qty)</td>
+                                <td>₹{{total}}</td>
+                            </tr>
+                            <tr>
+                                <td>Subtotal</td>
+                                <td>₹{{total}}</td>
+                            </tr>
+                            <tr>
+                                <td>Shipping</td>
+                                <td>Free shipping</td>
+                            </tr>
+                        </table><br>
+                        <div>
+                            <input type="radio" name="payment-method" value="COD"> Cash on Delivery
+                        </div>
+                        <div>
+                            <input type="radio" name="payment-method" value="RazorPay"> RazorPay <span>
+                                <img src="https://www.logolynx.com/images/logolynx/c3/c36093ca9fb6c250f74d319550acac4d.jpeg"
+                                    alt="" width="50">
+                            </span>
+                        </div>
+                        <div>
+                            <input type="radio" name="payment-method" value="PayPal" checked> PayPal <span>
+                                <img src="https://www.logolynx.com/images/logolynx/c3/c36093ca9fb6c250f74d319550acac4d.jpeg"
+                                    alt="" width="50">
+                            </span>
+                        </div>
+                        <div id="paypal-button-container" class="" style="display: flex; width: 100%;"></div>
+                        <button id="card-button-container" type="submit">Place Order</button>
+                    </div><!-- Yorder -->
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{!-- <label>
+        <input type="radio" name="payment-method" value="PayPal" checked>
+        <img src="/demo/checkout/static/img/paypal-mark.jpg" alt="Pay with Paypal">
+    </label>
+
+    <label>
+        <input type="radio" name="payment-method" value="RazorPay">
+        <img src="/demo/checkout/static/img/card-mark.png"
+            alt="Accepting Visa, Mastercard, Discover and American Express">
+    </label> --}}
+    {{!-- 
+    <div id="paypal-button-container"></div>
+    <div id="card-button-container" class="hidden"><button>Continue</button></div> --}}
+
+    <!-- Include the PayPal JavaScript SDK -->
+
+    <script
+        src="https://www.paypal.com/sdk/js?client-id=AWkDECW5hnJ1X3ojd_5GGIGVlyJDYP8TMSIg1_r2Zq2l0A023x08eboig1GyQkvo-hdYm3LkLVO2Gpd9&currency=USD"></script>
+
+    <script>
+        // Listen for changes to the radio fields
+        document.querySelectorAll('input[name=payment-method]').forEach(function (el) {
+            el.addEventListener('change', function (event) {
+
+                // If PayPal is selected, show the PayPal button
+                if (event.target.value === 'PayPal') {
+                    document.querySelector('#card-button-container').style.display = 'none';
+                    document.querySelector('#paypal-button-container').style.display = 'inline-block';
+                }
+
+                // If Card is selected, show the standard continue button
+                if (event.target.value === 'RazorPay' || event.target.value === 'COD') {
+                    document.querySelector('#card-button-container').style.display = 'inline-block';
+                    document.querySelector('#paypal-button-container').style.display = 'none';
+                }
+            });
+        });
+
+        // Hide Non-PayPal button by default
+        document.querySelector('#card-button-container').style.display = 'none';
+
+        // Render the PayPal button into #paypal-button-container
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+            style: {
+                color: 'blue',
+                shape: 'pill',
+                label: 'pay',
+                height: 40
+            }
+
+        }).render('#paypal-button-container');
+    </script>
+
+    {{!-- <div id="paypal-button-container"></div>
+
+    <!-- Include the PayPal JavaScript SDK -->
+    <script
+        src="https://www.paypal.com/sdk/js?client-id=AWkDECW5hnJ1X3ojd_5GGIGVlyJDYP8TMSIg1_r2Zq2l0A023x08eboig1GyQkvo-hdYm3LkLVO2Gpd9&currency=USD"></script>
+
+    <script>
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+            // Set up the transaction
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '100000'
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    console.log(details)
+
+                    // Show a success message to the buyer
+                    alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                });
+            }
+
+
+        }).render('#paypal-button-container');
+    </script>
+</section> --}}
+
+    {{!-- //RAZORPAY Payment integeration  --}}
+
+    <script>
+        $('#checkout-form').submit((e) => {
+            e.preventDefault()
+            $.ajax({
+                url: '/place-order',
+                method: 'post',
+                data: $('#checkout-form').serialize(), // SERIALIZE Geting all data from a form
+                success: (response) => {
+                    alert(response)
+                    if (response.codSuccess) {
+                        let id = response.codSuccess
+                        location.href = `/order-success/${id}`
+                    } else {
+                        razorpayPayment(response)
+                    }
+                }
+            })
+        })
+
+
+        function razorpayPayment(order) {
+            var options = {
+                "key": "rzp_test_CyyEWbJn9u0YOv", // Enter the Key ID generated from the Dashboard
+                "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "currency": "INR",
+                "name": "clouD techI onE",
+                "description": "Test Transaction",
+                "image": "https://example.com/your_logo",
+                "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                "handler": function (response) {
+                    verifyPayment(response, order)
+                },
+                "prefill": {
+                    "name": "Gaurav Kumar",
+                    "email": "gaurav.kumar@example.com",
+                    "contact": "9999999999"
+                },
+                "notes": {
+                    "address": "Razorpay Corporate Office"
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        }
+
+        function verifyPayment(payment, order) {
+            $.ajax({
+                url: '/verify-payment',
+                data: {
+                    payment,
+                    order,
+                },
+                method: 'post',
+                success: (response) => {
+                    if (response.status) {
+                        let id = response.status
+                        location.href = `/order-success/${id}`
+                    } else {
+                        alert("payment failed")
+                    }
+                }
+            })
+        }
+    </script>

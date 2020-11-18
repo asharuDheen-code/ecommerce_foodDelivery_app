@@ -15,7 +15,6 @@ console.log(signbtn);
 
 //singnupValidation
 signbtn.addEventListener("click", function (event) {
-  console.log("working");
   if (
     signuser.value === "" ||
     signemail.value === "" ||

@@ -1,39 +1,41 @@
 <section>
-    <div class="container">
-        <div class="row mt-4">
-            <a href="/admin/add-users" class="btn btn-success ml-auto">Add user</a>
+    <div class="container" style="display: flex; justify-content: center; max-width: 100%;">
+        <div class="col-lg-8 col-lg-offset-2">
+            <h1>User Section</h1>
+            <div class="row mt-4">
+                <a href="/admin/add-users" class="btn btn-success ml-auto">Add user</a>
+            </div>
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."
+                title="Type in a name">
+
+            <table class="table table-dark mt-3" id="myTable">
+                <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        {{!-- <th scope="col">password</th> --}}
+                        {{!-- <th scope="col">Image</th> --}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each users}}
+                    <tr>
+                        <th scope="row"> {{@index}} </th>
+                        <td>{{this.username}}</td>
+                        <td>{{this.email}}</td>
+                        {{!-- <td>{{this.password}}</td> --}}
+                        {{!-- <td><img style="width: 50px; heigth: 50px" src="/product-image/{{this._id}}.jpg" alt=""> </td> --}}
+                        <td>
+                            <a href="/admin/edit-users/{{this._id}}" class="btn btn-primary">Edit</a>
+                            <a href="/admin/delete-users?id={{this._id}}" class="btn btn-danger"
+                                onclick="return confirm('are you sure want delete {{this.name}} ?')">Delete</a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
         </div>
-        <a href="/admin/adminlogout"><button type="submit" class="btn btn-primary">log out</button></a>
-
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-
-        <table class="table table-dark mt-3" id="myTable">
-            <thead>
-                <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    {{!-- <th scope="col">password</th> --}}
-                    {{!-- <th scope="col">Image</th> --}}
-                </tr>
-            </thead>
-            <tbody>
-                {{#each users}}
-                <tr>
-                    <th scope="row"> {{@index}} </th>
-                    <td>{{this.username}}</td>
-                    <td>{{this.email}}</td>
-                    {{!-- <td>{{this.password}}</td> --}}
-                    {{!-- <td><img style="width: 50px; heigth: 50px" src="/product-image/{{this._id}}.jpg" alt=""> </td> --}}
-                    <td>
-                        <a href="/admin/edit-users/{{this._id}}" class="btn btn-primary">Edit</a>
-                        <a href="/admin/delete-users?id={{this._id}}" class="btn btn-danger"
-                            onclick="return confirm('are you sure want delete {{this.name}} ?')">Delete</a>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
     </div>
 </section>
 

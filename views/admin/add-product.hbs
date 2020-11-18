@@ -8,13 +8,22 @@
                     <input type="text" name="name" class="form-control">
                     <label for="">Category</label>
                     <input type="text" name="category" class="form-control">
-                    <label for="">Description</label>
-                    <input type="text" name="description" class="form-control">
+                    <label for="">Price</label>
+                    <input type="number" name="price" class="form-control">
+
                     <label for="">Image</label>
-                    <input type="file" name="Image" class="form-control">
-                    <button type="submit" class="btn btn-success mt-4">submit</button>
+                    <img src="/product-image/{{product._id}}.jpg" id="imgView" alt=""
+                        style="width: 100px; height: auto;" class="mt-4">
+                    <input type="file" name="Image" class="form-control mt-2" onchange="viewImage(event)">
+                    <button type="submit" class="btn btn-success mt-4">submitt</button>
                 </form>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    function viewImage(event) {
+        document.getElementById("imgView").src = URL.createObjectURL(event.target.files[0]);
+    }
+</script>

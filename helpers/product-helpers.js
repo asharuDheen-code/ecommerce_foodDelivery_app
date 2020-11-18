@@ -5,22 +5,19 @@ const { response } = require("express");
 
 module.exports = {
   addProduct: (product, callback) => {
-    console.log(product);
+    let price = parseFloat(product.price);
+    let datas = {...product, price}
     db.get()
       .collection("product")
-      .insertOne(product)
+      .insertOne(datas)
       .then((data) => {
-        // console.log(data.ops[0]._id);
         callback(data.ops[0]._id);
       });
   },
+
   getAllProducts: () => {
     return new Promise(async (resolve, reject) => {
-      let products = await db
-        .get()
-        .collection(collection.PRODUCT_COLLECTION)
-        .find()
-        .toArray();
+      let products = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray();
       resolve(products);
     });
   },

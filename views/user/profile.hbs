@@ -1,0 +1,335 @@
+<link rel="stylesheet" href="/stylesheets/profile.css" />
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1" /> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.3/cropper.css" />
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+
+<section>
+    <div class="container">
+        <div class="main-body" style="padding: 84px;margin-top: 5rem;">
+
+            <div class="row gutters-sm">
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-column align-items-center text-center">
+                                <div class="preview"><img id="profile-pic" src="/user-images/{{profile._id}}.jpg"
+                                        alt="user" class="rounded-circle" width="150" height="150"></div>
+                                <div class="mt-3">
+                                    <h4>{{profile.username}}</h4>
+                                    <form action="" id="profile-form" method="POST" enctype="multipart/form-data">
+                                    </form>
+
+                                    <input id="fileInput" type="file" name="file" placeholder="Photo" required=""
+                                        capture>
+
+                                    <button class="btn btn-outline-primary" id="profileImage">Add profile pic</button>
+
+                                    <button class="btn btn-outline-primary">Edit profile</button>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-8">
+
+                    <div class="card mb-3">
+
+                        <div class="card-body">
+
+                            <div class="row">
+
+                                <div class="col-sm-3">
+
+                                    <h6 class="mb-0">Full Name</h6>
+
+                                </div>
+
+                                <div class="col-sm-9 text-secondary">
+
+                                    {{profile.firstName}} {{profile.lastName}}
+
+                                </div>
+
+                            </div>
+
+                            <hr>
+
+                            <div class="row">
+
+                                <div class="col-sm-3">
+
+                                    <h6 class="mb-0">Email</h6>
+
+                                </div>
+
+                                <div class="col-sm-9 text-secondary">
+
+                                    {{profile.email}}
+
+                                </div>
+
+                            </div>
+
+                            <hr>
+
+                            <div class="row">
+
+                                <div class="col-sm-3">
+
+                                    <h6 class="mb-0">Phone</h6>
+
+                                </div>
+
+                                <div class="col-sm-9 text-secondary">
+
+                                    (239) 816-9029
+
+                                </div>
+
+                            </div>
+
+                            <hr>
+
+                            <div class="row">
+
+                                <div class="col-sm-3">
+
+                                    <h6 class="mb-0">Mobile</h6>
+
+                                </div>
+
+                                <div class="col-sm-9 text-secondary">
+
+                                    (320) 380-4539
+
+                                </div>
+
+                            </div>
+
+                            <hr>
+
+                            <div class="row">
+
+                                <div class="col-sm-3">
+
+                                    <h6 class="mb-0">Address</h6>
+
+                                </div>
+
+                                <div class="col-sm-9 text-secondary">
+
+                                    Bay Area, San Francisco, CA
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Crop Image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <canvas id="canvas">
+                        Your browser does not support the HTML5 canvas element.
+                    </canvas>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnCrop" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<!-- <script
+
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+
+      crossorigin="anonymous"
+
+    ></script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.3/cropper.js"></script>
+
+<script>
+    $("#profileImage").click(function (e) {
+
+        $("#fileInput").click();
+
+    });
+
+
+
+    var canvas = $("#canvas"),
+
+        context = canvas.get(0).getContext("2d")
+
+
+
+    $("#fileInput").on("change", function () {
+
+        if (this.files && this.files[0]) {
+
+            if (this.files[0].type.match(/^image\//)) {
+
+                $("#exampleModalCenter").modal("show"); //---open model----//
+
+                var reader = new FileReader();
+
+                reader.onload = function (evt) {
+
+                    var img = new Image();
+
+                    img.onload = function () {
+
+                        context.canvas.width = img.width;
+
+                        context.canvas.height = img.height;
+
+                        context.drawImage(img, 0, 0);
+
+                        console.log(img.height);
+
+                        console.log(img.width);
+
+                        var cropper = canvas.cropper({
+
+                            aspectRatio: 16 / 9,
+
+                        });
+
+                        $("#btnCrop").click(function () {
+
+                            // Get a string base 64 data url
+
+                            var croppedImageDataURL = canvas
+
+                                .cropper("getCroppedCanvas")
+
+                                .toDataURL("image/jpg");
+
+                            var file = dataURLtoFile(croppedImageDataURL, 'abc.jpg');
+
+
+
+                            var fd = new FormData();
+
+                            fd.append("file", file);
+
+
+
+                            $.ajax({
+
+                                method: "POST",
+
+                                url: "/addProfilePic",
+
+                                data: fd,
+
+                                cache: false,
+
+                                contentType: false,
+
+                                processData: false,
+
+                                success: (response) => {
+
+                                    // $("#profile-pic").attr("src",response); 
+
+                                    // $("#profile-pic").show();
+
+                                    location.reload();
+
+                                },
+
+                            });
+
+
+
+                            $("#exampleModalCenter").modal("hide");
+
+                        });
+
+                    };
+
+                    img.src = evt.target.result;
+
+                };
+
+                reader.readAsDataURL(this.files[0]);
+
+            } else {
+
+                alert("Invalid file type! Please select an image file.");
+
+            }
+
+        } else {
+
+            alert("No file(s) selected.");
+
+        }
+
+    });
+
+    // *****************convert base 64 to file******************* 
+
+    function dataURLtoFile(dataurl, filename) {
+
+        var arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, { type: mime });
+
+    }
+</script>

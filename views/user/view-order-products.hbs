@@ -1,0 +1,120 @@
+<link rel="stylesheet" href="/stylesheets/orders.css">
+
+<section>
+
+    <body oncontextmenu='return false' class='snippet-body '>
+        <div class="container-fluid my-5 mt-8 d-flex justify-content-center" style="margin-top: 6rem !important;">
+            <div class="card card-1">
+                <div class="card-header bg-white">
+                    <div class="media flex-sm-row flex-column-reverse justify-content-between ">
+                        {{#if orders}}
+                        <div class="col my-auto">
+                            <h4 class="mb-0">Thanks for your Order,<span
+                                    class="change-color">{{this.orders.status}}</span> !</h4>
+                        </div>
+                        {{/if}}
+                        <div class="col-auto text-center my-auto pl-0 pt-sm-4"> <img
+                                class="img-fluid my-auto align-items-center mb-0 pt-3" src="/images/logo.png" width="70"
+                                height="70">
+                            <p class="mb-4 pt-0 Glasses">Food For Everyone</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-between mb-3">
+                        <div class="col-auto">
+                            <h6 class="color-1 mb-0 change-color">Receipt</h6>
+                        </div>
+                        <div class="col-auto "> <small>Receipt Voucher : 1KAU9-84UIL</small> </div>
+                    </div>
+                    {{#each order}}
+                    <div class="row">
+                        <div class="col">
+                            <div class="card card-2">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <div class="sq align-self-center "> <img
+                                                class="img-fluid my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0"
+                                                src="/product-image/{{this.product._id}}.jpg" style="border-radius: 50%;" width="135" height="135" />
+                                        </div>
+                                        {{!-- <div class="image">
+                                            <img style="width: 100px; height: 65px;"
+                                                src="/product-image/{{this.product._id}}.jpg" alt="" />
+                                        </div> --}}
+                                        <div class="media-body my-auto text-right">
+                                            <div class="row my-auto flex-column flex-md-row">
+                                                <div class="col my-auto" style="text-align: left;">
+                                                    <h6 class="mb-0"> {{product.name}}</h6>
+                                                </div>
+                                                <div class="col-auto my-auto"> <small>{{product.category}} </small>
+                                                </div>
+                                                {{!-- <div class="col my-auto"> <small>Category : </small></div> --}}
+                                                <div class="col my-auto"> <small>Qty : {{this.quantity}}</small></div>
+                                                <div class="col my-auto">
+                                                    <h6 class="mb-0">&#8377; {{product.price}}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="my-3 ">
+                                    <div class="row">
+                                        <div class="col-md-3 mb-3"> <small> Order Id: {{this._id}} <span></span></small>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                    {{!-- <div class="row mt-4">
+                        <div class="col">
+                            <div class="row justify-content-between">
+                                <div class="col-auto">
+                                    <p class="mb-1 text-dark"><b>Order Details</b></p>
+                                </div>
+                                <div class="flex-sm-col text-right col">
+                                    <p class="mb-1"><b>Total</b></p>
+                                </div>
+                                <div class="flex-sm-col col-auto">
+                                    <p class="mb-1">&#8377; {{this.quantity}}</p>
+                                </div>
+                            </div>
+                            <div class="row justify-content-between">
+                                <div class="flex-sm-col text-right col">
+                                    <p class="mb-1"> <b>Discount</b></p>
+                                </div>
+                                <div class="flex-sm-col col-auto">
+                                    <p class="mb-1">&#8377;150</p>
+                                </div>
+                            </div>
+                            <div class="row justify-content-between">
+                                <div class="flex-sm-col text-right col">
+                                    <p class="mb-1"><b>GST 18%</b></p>
+                                </div>
+                                <div class="flex-sm-col col-auto">
+                                    <p class="mb-1">843</p>
+                                </div>
+                            </div>
+                            <div class="row justify-content-between">
+                                <div class="flex-sm-col text-right col">
+                                    <p class="mb-1"><b>Delivery Charges</b></p>
+                                </div>
+                                <div class="flex-sm-col col-auto">
+                                    <p class="mb-1">Free</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row invoice ">
+                        <div class="col">
+                            <p class="mb-1"> Invoice Number : 788152</p>
+                            <p class="mb-1">Invoice Date : 22 Dec,2019</p>
+                            <p class="mb-1">Recepits Voucher:18KU-62IIK</p>
+                        </div>
+                    </div> --}}
+                </div>
+            </div>
+        </div>
+    </body>
+</section>

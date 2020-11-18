@@ -1,35 +1,63 @@
 <section>
-    <div class="container">
-        <div class="row mt-4">
-            <a href="/admin/add-product" class="btn btn-success ml-auto">Add Products</a>
+    <div class="" style="display: flex; justify-content: center;">
+        <div class="container col-lg-8 col-lg-offset-2">
+            <h1>Product Section</h1>
+            <div class="row mt-4">
+                <a href="/admin/add-product" class="btn btn-success ml-auto">Add Products</a>
+            </div>
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."
+                title="Type in a name">
+            <table class="table table-dark mt-3" id="myTable">
+                <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">description</th>
+                        <th scope="col">Image</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each products}}
+                    <tr>
+                        <th scope="row">{{@index}}</th>
+                        <td>{{this.name}}</td>
+                        <td>{{this.category}}</td>
+                        <td>{{this.description}}</td>
+                        <td><img style="width: 50px; heigth: 50px" src="/product-image/{{this._id}}.jpg" alt=""> </td>
+                        <td>
+                            {{!-- <a href="/admin/edit-product/{{this._id}}" class="btn btn-primary">Edit</a> --}}
+                            <a href="/admin/edit-products/{{this._id}}" class="btn btn-primary">Edit</a>
+                            <a href="/admin/delete-product/{{this._id}}" class="btn btn-danger"
+                                onclick="return confirm('are you sure want delete {{this.name}} ?')">Delete</a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
         </div>
-        <table class="table table-dark mt-3">
-            <thead>
-                <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">description</th>
-                    <th scope="col">Image</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each products}}
-                <tr>
-                    <th scope="row">1</th>
-                    <td>{{this.name}}</td>
-                    <td>{{this.category}}</td>
-                    <td>{{this.description}}</td>
-                    <td><img style="width: 50px; heigth: 50px" src="/product-image/{{this._id}}.jpg" alt=""> </td>
-                    <td>
-                        {{!-- <a href="/admin/edit-product/{{this._id}}" class="btn btn-primary">Edit</a> --}}
-                        <a href="/admin/edit-products/{{this._id}}" class="btn btn-primary">Edit</a>
-                        <a href="/admin/delete-product/{{this._id}}" class="btn btn-danger"
-                            onclick="return confirm('are you sure want delete {{this.name}} ?')">Delete</a>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
     </div>
+
 </section>
+
+
+<script>
+    function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>

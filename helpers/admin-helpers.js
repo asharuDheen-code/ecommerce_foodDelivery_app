@@ -28,6 +28,29 @@ module.exports = {
         });
     });
   },
+
+  // viewProduct: () => {
+  //   return new Promise(async (resolve, reject) => {
+  //     let allUsers = await db
+  //       .get()
+  //       .collection(collection.PRODUCT_COLLECTION)
+  //       .find()
+  //       .toArray();
+  //     resolve(products);
+  //   });
+  // },
+
+  // getAllProducts: () => {
+  //   return new Promise(async (resolve, reject) => {
+  //     let products = await db
+  //       .get()
+  //       .collection(collection.PRODUCT_COLLECTION)
+  //       .find()
+  //       .toArray();
+  //     resolve(products);
+  //   });
+  // },
+
   viewUser: () => {
     return new Promise(async (resolve, reject) => {
       let allUsers = await db
@@ -36,7 +59,6 @@ module.exports = {
         .find()
         .toArray();
       resolve(allUsers);
-      console.log(allUsers);
     });
   },
 
@@ -125,6 +147,16 @@ module.exports = {
               });
           }
         });
+    });
+  },
+  getUserOrder: () => {
+    return new Promise((resolve, reject) => {
+      let orders = db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .find()
+        .toArray();
+      resolve(orders);
     });
   },
 };

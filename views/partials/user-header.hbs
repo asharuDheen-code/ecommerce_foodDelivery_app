@@ -1,34 +1,43 @@
+<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+
 <header>
     {{#if user}}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">clouD-techI</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+    <nav class="navbar navbar-expand-lg navbar fixed-top  navbar-light bg-light">
+        <a class="navbar-brand" href="/">
+            <img src="/images/logo.png" width="50" height="50" class="d-inline-block" alt=""> swiss Knife
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#Menu">Menu</a>
+                </li>
                 {{#if user}}
-                <li class="nav-item active">
-                    <a class="nav-link" href="/cart">Cart <span class="sr-only">(current)</span></a>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cart">Cart<span class="badge badge-success"  id="cartCount">{{cartCount}}</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">orders</a>
+                    <a class="nav-link" href="/orders">Orders</a>
                 </li>
                 {{/if}}
             </ul>
             <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-secondary dropdown-toggle"
+                    style="color: #000; background-color: #f8f9fa; border-color: #f8f9fa; " type="button"
+                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{#if user}}
                     {{user.username}}
                     {{else}}
                     Account
                     {{/if}}
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div id="drop" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     {{#if user}}
+                    <a class="dropdown-item" href="/profile">Profile</a>
                     <a class="dropdown-item" href="/logout">logOut</a>
                     {{else}}
                     <a class="dropdown-item" href="/login">login</a>
@@ -37,8 +46,6 @@
             </div>
         </div>
     </nav>
-    {{else}}
-    {{!-- <h1>not a user</h1> --}}
-   {{/if}}
-</header>
 
+    {{/if}}
+</header>
