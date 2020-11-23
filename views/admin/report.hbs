@@ -1,0 +1,197 @@
+{{!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css"> --}}
+
+<link rel="stylesheet" href="/stylesheets/sidebar.css">
+<style>
+    #dashboard {
+        color: red;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+</style>
+
+<header>
+    <div class="">
+        <div style="display: flex;">
+
+            <div id="wrapper">
+                <div class="overlay"></div>
+                <!-- Sidebar -->
+                <div>
+                    <nav class="navbar navbar-inverse fixed-top" id="sidebar-wrapper" role="navigation">
+                        <ul class="nav sidebar-nav">
+                            <div class="sidebar-header">
+                                <div class="sidebar-brand">
+                                    <a href="#">Swiss Knife</a>
+                                </div>
+                            </div>
+                            <li><a href="/admin"><span id="dashboard">Dashboared</span></a></li>
+                            <li><a href="/admin/view-users">User Details</a></li>
+                            <li><a href="/admin/view-product">Product Details</a></li>
+                            <li><a href="/admin/order-details">Order Details</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <!-- /#sidebar-wrapper -->
+
+                <!-- Page Content -->
+                <div id="page-content-wrapper">
+                    <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
+                        <span class="hamb-top"></span>
+                        <span class="hamb-middle"></span>
+                        <span class="hamb-bottom"></span>
+                    </button>
+                </div>
+                <!-- /#page-content-wrapper -->
+            </div>
+
+            <section style="width: 97%; margin-left: 95px; margin-bottom: 100px; margin-top: 90px;height: auto;">
+
+                <label for="start">Start date:</label>
+                {{!-- calendar --}}
+                <input type="date" id="calendar" name="calendar" value=" " min="" max="">
+                {{!-- button --}}
+                <input type="button" value="submit" id="dateButton">
+                {{!-- input  --}}
+                <input type="" value="" id="dateResult">
+
+                <table id="example" class="table table-striped table-bordered" style="">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Mobile</th>
+                            <th>Order Id</th>
+                            <th>Date</th>
+                            <th>Order Status</th>
+                            <th>Total Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    {{!-- <tbody id="values">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>₹</td>
+                            <td>
+                                <div style="display: flex;">
+                                    <div style="margin-right: 5px;">
+                                        <a href="/admin/verify-sucessoOrder/{{this._id}}"
+                                            class="btn btn-success">Accept</a>
+                                    </div>
+                                    <div>
+                                        <a href="/admin/verify-cancelOrder/{{this._id}}"
+                                            class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody> --}}
+
+                    <tfoot>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Mobile</th>
+                            <th>Order Id</th>
+                            <th>Date</th>
+                            <th>Order Status</th>
+                            <th>Total Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </section>
+            <!-- /#wrapper -->
+            <div class="logOutBtn">
+                <a href="/admin/adminlogout" class="btn btn-danger">Log Out</a>
+            </div>
+        </div>
+    </div>
+
+</header>
+
+<script>
+    $("#dateButton").click(function (e) {
+
+        let datedatas = ` <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>₹</td>
+                            <td>
+                                <div style="display: flex;">
+                                    <div style="margin-right: 5px;">
+                                        <a href="/admin/verify-sucessoOrder/{{this._id}}"
+                                            class="btn btn-success">Accept</a>
+                                    </div>
+                                    <div>
+                                        <a href="/admin/verify-cancelOrder/{{this._id}}"
+                                            class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </td>
+                    </tr>  `
+
+
+
+        let date = $("#calendar").val();
+        $.ajax({
+            url: '/admin/reports',
+            data: {
+                date: date,
+            },
+            method: 'post',
+
+            success: (response) => {
+                let length = Object.keys(response).length
+
+                alert("kayari")
+
+                document.getElementsByClassName("odd") = none
+                for (var i = 0; i < length; i++) {
+                    alert("akath kayaritto")
+                    let reports = response[i]
+                    var datas = {
+                        i: {
+                            name: reports.deliveryDetails.name,
+                            mobile: reports.deliveryDetails.mobile,
+                            orderId: reports._id,
+                            date: reports.date,
+                            ordereStatus: reports.status,
+                            total: reports.total
+                        }
+                    }
+                    $.each(datas, function (key, value) {
+                        var tr = $("<tr />")
+                        $.each(value, function (k, v) {
+                            tr.append(
+                                $("<td />", {
+                                    html: v
+                                })[0].outerHTML
+                            );
+                            $("table tbody").append(tr)
+                        })
+                    })
+                }
+            }
+        })
+    });
+
+</script>
+
+{{!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
+
+{{!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script> --}}
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+</script>

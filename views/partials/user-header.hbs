@@ -1,5 +1,44 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 
+<style>
+    .dropbtn {
+        background-color: ;
+        color: black;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+</style>
+
 <header>
     {{#if user}}
 
@@ -14,15 +53,23 @@
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#Menu">Menu</a>
+                    <a class="nav-link" href="/">Menu</a>
                 </li>
                 {{#if user}}
                 <li class="nav-item">
-                    <a class="nav-link" href="/cart">Cart<span class="badge badge-success"  id="cartCount">{{cartCount}}</span></a>
+                    <a class="nav-link" href="/cart">Cart<span class="badge badge-success"
+                            id="cartCount">{{cartCount}}</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/orders">Orders</a>
                 </li>
+                <div class="dropdown">
+                    <button class="dropbtn" style="background: #f8f9fa; margin-top: 7px; color: rgba(0, 0, 0, 0.5);">Category</button>
+                    <div class="dropdown-content">
+                        <a href="/nonVegCategory">Non Veg Items</a>
+                        <a href="/vegCategory">Veg Items</a>
+                    </div>
+                </div>
                 {{/if}}
             </ul>
             <div class="dropdown">

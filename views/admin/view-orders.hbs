@@ -2,6 +2,14 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css"> --}}
 
 <link rel="stylesheet" href="/stylesheets/sidebar.css">
+<style>
+    #dashboard {
+        color: red;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+</style>
 
 <header>
     <div class="">
@@ -19,6 +27,7 @@
                                     <a href="#">Swiss Knife</a>
                                 </div>
                             </div>
+                            <li><a href="/admin"><span id="dashboard">Dashboared</span></a></li>
                             <li><a href="/admin/view-users">User Details</a></li>
                             <li><a href="/admin/view-product">Product Details</a></li>
                             <li><a href="/admin/order-details">Order Details</a></li>
@@ -37,11 +46,7 @@
                 </div>
                 <!-- /#page-content-wrapper -->
             </div>
-            <section style="width: 97%;
-    margin-left: 95px;
-    margin-bottom: 100px;
-    margin-top: 90px;
-    height: auto;">
+            <section style="width: 97%; margin-left: 95px; margin-bottom: 100px; margin-top: 90px;height: auto;">
                 <table id="example" class="table table-striped table-bordered" style="">
                     <thead>
                         <tr>
@@ -49,8 +54,9 @@
                             <th>Mobile</th>
                             <th>Order Id</th>
                             <th>Date</th>
-                            <th>Status</th>
+                            <th>Order Status</th>
                             <th>Total Price</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,20 +64,24 @@
                         <tr>
                             <td>{{deliveryDetails.name}}</td>
                             <td>{{deliveryDetails.mobile}}</td>
-                            <td>{{_id}}</td>
+                            <td>{{this._id}}</td>
                             <td>{{date}}</td>
                             <td>{{status}}</td>
                             <td>₹{{total}}</td>
+                            <td>
+                                <div style="display: flex;">
+                                    <div style="margin-right: 5px;">
+                                        <a href="/admin/verify-sucessoOrder/{{this._id}}"
+                                            class="btn btn-success">Accept</a>
+                                    </div>
+                                    <div>
+                                        <a href="/admin/verify-cancelOrder/{{this._id}}"
+                                            class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         {{/each}}
-                        {{!-- <tr>
-                <td>Garrett Winters</td>
-                <td>Accountant</td>
-                <td>Tokyo</td>
-                <td>63</td>
-                <td>2011/07/25</td>
-                <td>$170,750</td>
-            </tr> --}}
                     </tbody>
                     <tfoot>
                         <tr>
@@ -79,8 +89,9 @@
                             <th>Mobile</th>
                             <th>Order Id</th>
                             <th>Date</th>
-                            <th>Status</th>
+                            <th>Order Status</th>
                             <th>Total Price</th>
+                            <th>Action</th>
                         </tr>
                     </tfoot>
                 </table>

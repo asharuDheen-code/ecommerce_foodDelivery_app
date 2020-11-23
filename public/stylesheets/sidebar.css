@@ -345,6 +345,14 @@ a[href*="#followme"]::before {
   margin-top: 10px;
   margin-right: 10px;
 }
+
+#dashboard {
+  color: red;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
 /*-------------------------------*/
 /*            Overlay            */
 /*-------------------------------*/

@@ -1,0 +1,83 @@
+{{!-- <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"> --}}
+
+<section>
+    {{#if nonVegDatas}}
+
+    <body class="viewProducts" data-spy="scroll" data-target=".navbar" data-offset="50">
+        <div class="container">
+
+            <div class="row" id="Menu">
+                <div class="col navMenu">
+                    <h2 class="text-center">~ Menu ~</h2>
+                </div>
+            </div>
+            <div class="row bg-light">
+                {{#each nonVegDatas}}
+                <div class="col-md-4" data-aos="slide-up" style="margin: 20px 0 30px 0;">
+                    <div class="card">
+                        <img class="card-img-top img-fluid " src="/product-image/{{this._id}}.jpg">
+                        <div class="card-body">
+
+                            <h5 class="card-title">~ Fast Food ~</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">{{this.name}}</li>
+                                <li class="list-group-item">{{this.category}}</li>
+                                <li class="list-group-item">Details</li>
+                                <li class="list-group-item">20% off | Use swissKnife</li>
+                                <li class="list-group-item">₹ {{this.price}}</li>
+                            </ul>
+                        </div>
+                        <div style="display: flex; justify-content: space-evenly; margin: 7px 0 11px 0px;">
+                            <div>
+                                <button onclick="addToCart('{{this._id}}')" class="btn btn-primary">Add to cart</button>
+                            </div>
+                            <div>
+                                <a class="btn btn-success" href="/productDtails/{{this._id}}">more</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+    </body>
+    {{else}}
+
+    <body class="viewProducts" data-spy="scroll" data-target=".navbar" data-offset="50">
+        <div class="container">
+
+            <div class="row" id="Menu">
+                <div class="col navMenu">
+                    <h2 class="text-center">~ Menu ~</h2>
+                </div>
+            </div>
+            <div class="row bg-light">
+                {{#each vegDatas}}
+                <div class="col-md-4" data-aos="slide-up" style="margin: 20px 0 30px 0;"">
+                    <div class=" card">
+                    <img class="card-img-top img-fluid " src="/product-image/{{this._id}}.jpg">
+                    <div class="card-body">
+
+                        <h5 class="card-title">~ Fast Food ~</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">{{this.name}}</li>
+                            <li class="list-group-item">{{this.category}}</li>
+                            <li class="list-group-item">Details</li>
+                            <li class="list-group-item">20% off | Use swissKnife</li>
+                            <li class="list-group-item">₹ {{this.price}}</li>
+                        </ul>
+                    </div>
+                    <div style="display: flex; justify-content: space-evenly; margin: 7px 0 11px 0px;">
+                        <div>
+                            <button onclick="addToCart('{{this._id}}')" class="btn btn-primary">Add to cart</button>
+                        </div>
+                        <div>
+                            <a class="btn btn-success" href="/productDtails/{{this._id}}">more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </body>
+    {{/if }}
+</section>

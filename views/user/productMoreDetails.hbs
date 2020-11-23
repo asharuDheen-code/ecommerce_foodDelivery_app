@@ -1,0 +1,263 @@
+<link href="/stylesheets/productDetails.css" rel="stylesheet">
+
+<style>
+    @media only screen and (min-width: 600px) {
+        * {
+            box-sizing: border-box;
+        }
+
+        .img-zoom-container {
+            position: relative;
+        }
+
+        .img-zoom-lens {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            /*set the size of the lens:*/
+            width: 200px;
+            height: 200px;
+        }
+
+        .img-zoom-result {
+            border: 1px solid #d4d4d4;
+            width: 500px;
+            height: 500px;
+            margin-left: 400px;
+            margin-top: 130px;
+        }
+
+
+
+        #myhide {
+            display: none;
+        }
+
+        .img-zoom-container:hover #myhide {
+            display: block;
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        .img-zoom-container:hover #myhide {
+            display: none;
+        }
+
+        .img-zoom-container {
+            position: relative;
+            width: 480px;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .imgid {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .imgid img {
+            -webkit-transition: 0.6s ease;
+            transition: 0.6s ease;
+        }
+
+        .img-zoom-container:hover .imgid img {
+            -webkit-transform: scale(1.9);
+            transform: scale(1.9);
+            overflow: show;
+        }
+
+    }
+</style>
+
+<section>
+
+    <body>
+        <main class="container" style="margin-top: 80px;">
+
+
+
+            <!-- Left Column / Headphones Image -->
+            <div class="left-column image img-zoom-container" onmousenter="showme(this)">
+                <span>
+                    <p class="imgid" style="allign:center;"><img id="myimage"
+                            style="width: 90%; height: 550px; border-radius: 5px;" data-image="red"
+                            class="active card-img-top img-fluid " src="/product-image/{{product._id}}.jpg?w=780&ssl=1"
+                            srcset="/product-image/{{product._id}}.jpg"></p>
+                </span>
+                <span id="myhide"
+                    style="float: right; position: absolute; top: -100px;left: 300px; width: auto; height: 100%;">
+                    <div id="myresult" class="img-zoom-result" onmouseleave="hideme(this)"></div>
+                </span>
+
+                {{!-- <img data-image="black" src="/images/fish-menu.jpg" alt="">
+                <img data-image="blue" src="/images/fish-menu.jpg" alt="">
+                <img style="width: 90%; height: 550px; border-radius: 5px;" data-image="red"
+                    class="active card-img-top img-fluid " src="/product-image/{{product._id}}.jpg"> --}}
+                {{!-- <img data-image="red" class="active" src="/images/fish-menu.jpg" alt=""> --}}
+            </div>
+
+
+            <!-- Right Column -->
+            <div class="right-column">
+
+                <!-- Product Description -->
+                <div class="product-description">
+                    <span>Item</span>
+                    <h1>{{product.name}}</h1>
+                    <p>{{product.category}}</p>
+                </div>
+
+                <!-- Product Configuration -->
+                <div class="product-configuration">
+
+                    <!-- Product Color -->
+                    <div class="product-color">
+                        <span>Similar Products</span>
+
+                        <div class="color-choose">
+                            <div>
+                                <input data-image="red" type="radio" id="red" name="color" value="red" checked>
+                                <label for="red"><span></span></label>
+                            </div>
+                            <div>
+                                <input data-image="blue" type="radio" id="blue" name="color" value="blue">
+                                <label for="blue"><span></span></label>
+                            </div>
+                            <div>
+                                <input data-image="black" type="radio" id="black" name="color" value="black">
+                                <label for="black"><span></span></label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Cable Configuration -->
+                    <div class="cable-config">
+                        <span>Category'S</span>
+
+                        <div class="cable-choose">
+                            <button>Non Veg</button>
+                            <button>Veg</button>
+                            {{!-- <button>Long-coiled</button> --}}
+                        </div>
+
+                        <a href="#">How to configurate your headphones</a>
+                    </div>
+                </div>
+
+                <!-- Product Pricing -->
+                <div class="product-price">
+                    <span>Rs. {{product.price}}</span>
+                    {{!-- <a href="#" class="cart-btn">Add to cart</a> --}}
+                    <button onclick="addToCart('{{product._id}}')" class="cart-btn btn btn-primary">Add to cart</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Scripts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" charset="utf-8"></script>
+    </body>
+</section>
+
+<script>
+    imageZoom("myimage", "myresult");
+    function imageZoom(imgID, resultID) {
+        var img, lens, result, cx, cy;
+        img = document.getElementById(imgID);
+        result = document.getElementById(resultID);
+        /*create lens:*/
+        lens = document.createElement("DIV");
+        lens.setAttribute("class", "img-zoom-lens");
+        /*insert lens:*/
+        img.parentElement.insertBefore(lens, img);
+        /*calculate the ratio between result DIV and lens:*/
+        console.log("result.offsetWidth  >>>>>", result.offsetWidth, "lens.offsetWidth>>>>>>>>>>>", lens.offsetWidth);
+        cx = 300 / lens.offsetWidth;
+        console.log("result.offsetHeight>>>>>", result.offsetHeight, "llens.offsetHeighth>>>>>>>>>>>", lens.offsetHeight);
+        cy = 300 / lens.offsetHeight;
+        /*set background properties for the result DIV:*/
+        result.style.backgroundImage = "url('" + img.srcset + "')";
+        result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
+        /*execute a function when someone moves the cursor over the image, or the lens:*/
+        lens.addEventListener("mousemove", moveLens);
+        img.addEventListener("mousemove", moveLens);
+        /*and also for touch screens:*/
+        lens.addEventListener("touchmove", moveLens);
+        img.addEventListener("touchmove", moveLens);
+        // img.addEventListener("mouseenter", bigImg);  
+
+
+
+        function bigImg(x) {
+            console.log("onmouseenter >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        }
+
+        function normalImg(x) {
+            //result.style.display ="none";
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>onmousLEAVE");
+        }
+
+
+
+        function moveLens(e) {
+            var pos, x, y;
+            /*prevent any other actions that may occur when moving over the image:*/
+            e.preventDefault();
+            /*get the cursor's x and y positions:*/
+            pos = getCursorPos(e);
+            /*calculate the position of the lens:*/
+            x = pos.x - (lens.offsetWidth / 2);
+            y = pos.y - (lens.offsetHeight / 2);
+            // console.log("x" , x , "and Y " , y); 
+            /*prevent the lens from being positioned outside the image:*/
+            if (x > img.width - lens.offsetWidth) { x = img.width - lens.offsetWidth; } //else{img.addEventListener("mouseenter", bigImg);  }
+            if (x < 0) { x = 0; }
+            if (y > img.height - lens.offsetHeight) { y = img.height - lens.offsetHeight; img.addEventListener("mouseleave", normalImg); }//else{img.addEventListener("mouseenter", bigImg);  }
+            if (y < 0) { y = 0; }
+            /*set the position of the lens:*/
+            lens.style.left = x + "px";
+            lens.style.top = y + "px";
+            /*display what the lens "sees":*/
+            result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
+        }
+        function getCursorPos(e) {
+            var a, x = 0, y = 0;
+            e = e || window.event;
+            /*get the x and y positions of the image:*/
+            a = img.getBoundingClientRect();
+            //console.log("------------------A  left" ,  a ); 
+            /*calculate the cursor's x and y coordinates, relative to the image:*/
+            x = e.pageX - a.left;
+            y = e.pageY - a.top;
+            /*consider any page scrolling:*/
+            x = x - window.pageXOffset;
+            y = y - window.pageYOffset;
+            return { x: x, y: y };
+        }
+
+    }
+
+    function hideme(x) {
+        //x.style.display = "none";
+
+    }
+    function showme(x) {
+        //x.style.display = "block";
+
+    }
+
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        $('.color-choose input').on('click', function () {
+            var headphonesColor = $(this).attr('data-image');
+
+            $('.active').removeClass('active');
+            $('.left-column img[data-image = ' + headphonesColor + ']').addClass('active');
+            $(this).addClass('active');
+        });
+
+    });
+</script>

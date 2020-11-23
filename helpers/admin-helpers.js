@@ -149,6 +149,7 @@ module.exports = {
         });
     });
   },
+
   getUserOrder: () => {
     return new Promise((resolve, reject) => {
       let orders = db
@@ -159,4 +160,70 @@ module.exports = {
       resolve(orders);
     });
   },
+
+  changeSuccessOrderStatus: (orderId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.ORDER_COLLECTION)
+        .updateOne(
+          { _id: objectId(orderId) },
+          {
+            $set: {
+              status: "Your Order Confirme",
+            },
+          }
+        )
+        .then(() => {
+          resolve(response);
+          });
+    })
+  },
+
+  changeCancelOrderStatus: (orderId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.ORDER_COLLECTION)
+        .updateOne(
+          { _id: objectId(orderId) },
+          {
+            $set: {
+              status: "Your Order Canceled",
+            },
+          }
+        )
+        .then(() => {
+          resolve(response);
+          });
+    })
+  },
+
+  getAllUsers: () => {
+    return new Promise((resolve, reject) => {
+     db.get().collection(collection.USER_COLLECTION).countDocuments().then((response) => {
+       resolve(response)
+     })
+    })
+  },
+
+  getAllOrders: () => {
+    return new Promise((resolve, reject) => {
+     db.get().collection(collection.ORDER_COLLECTION).countDocuments().then((response) => {
+       resolve(response)
+     })
+    })
+  },
+
+  getAllProducts: () => {
+    return new Promise((resolve, reject) => {
+     db.get().collection(collection.PRODUCT_COLLECTION).countDocuments().then((response) => {
+       resolve(response)
+     })
+    })
+  },
+
+  getAllDatas: (userDate) => {
+    return new Promise((resolve, reject) => {
+      let data = db.get().collection(collection.ORDER_COLLECTION)
+      .find({date: userDate}).toArray()
+      resolve(data)
+    })
+  }
 };

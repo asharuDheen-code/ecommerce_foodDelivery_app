@@ -22,6 +22,28 @@ module.exports = {
     });
   },
 
+  getOneProduct: (id) => {
+    return new Promise((resolve, reject) => {
+      let product = db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id: objectId(id)})
+      resolve(product)
+      console.log("Productssssssaaantto", product);
+    })
+  },
+
+  nonVegCategories: () => {
+    return new Promise(async (resolve, reject) => {
+      let nonVegDatas = await db.get().collection(collection.PRODUCT_COLLECTION).find({category: "NonVeg"}).toArray();
+      resolve(nonVegDatas)
+    })
+  },
+
+  vegCategories: () => {
+    return new Promise(async (resolve, reject) => {
+      let vegDatas = await db.get().collection(collection.PRODUCT_COLLECTION).find({category: "Veg"}).toArray();
+      resolve(vegDatas)
+    })
+  },
+
   deleteProduct: (prodId) => {
     return new Promise((resolve, reject) => {
       db.get()

@@ -83,3 +83,156 @@
     </div>
 </section> --}}
 
+<script>
+    $('#checkout-form').submit((e) => {
+        e.preventDefault()
+        $.ajax({
+            url: '/place-order',
+            method: 'post',
+            data: $('#checkout-form').serialize(), // SERIALIZE Geting all data from a form
+            success: (response) => {
+                alert(response)
+                if (response.codSuccess) {
+                    let id = response.codSuccess
+                    location.href = `/order-success/${id}`
+                } else if (response.Razorpay) {
+                    razorpayPayment(response.Razorpay)
+                } else if (response.Paypal) {
+                    document.querySelector('#card-button-container').style.display = 'none';
+                    let id = response.paypal.id;
+                    let amount = response.paypal.amount
+                    paypalPayment(id, amount)
+                }
+            }
+        })
+    })
+    //RazorPay integration
+
+    function razorpayPayment(order) {
+
+        var options = {
+            "key": "rzp_test_CyyEWbJn9u0YOv", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "clouD techI onE",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+                verifyPayment(response, order)
+            },
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9999999999"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+
+    function verifyPayment(payment, order) {
+        $.ajax({
+            url: '/verify-payment',
+            data: {
+                payment,
+                order,
+            },
+            method: 'post',
+            success: (response) => {
+                if (response.status) {
+                    let id = response.status
+                    location.href = `/order-success/${id}`
+                } else {
+                    alert("payment failed")
+                }
+            }
+        })
+    }
+
+    function paypalPayment(orderId, amount) {
+
+        // Hide Non-PayPal button by default
+        document.querySelector('#paypal-button-container').style.display = 'none';
+
+
+        // Listen for changes to the radio fields
+        document.querySelectorAll('input[name=payment-method]').forEach(function (el) {
+            el.addEventListener('change', function (event) {
+
+                // If PayPal is selected, show the PayPal button
+                if (event.target.value === 'PayPal') {
+                    document.querySelector('#card-button-container').style.display = 'none';
+                    document.querySelector('#cards-button-container').style.display = 'none';
+                    document.querySelector('#paypal-button-container').style.display = 'inline-block';
+                }
+
+                // If Card is selected, show the standard continue button
+                else if (event.target.value === 'RazorPay') {
+                    document.querySelector('#card-button-container').style.display = 'inline-block';
+                    document.querySelector('#paypal-button-container').style.display = 'none';
+                    document.querySelector('#cards-button-container').style.display = 'none';
+                }
+                else if (event.target.value === 'COD') {
+                    document.querySelector('#cards-button-container').style.display = 'inline-block';
+                    document.querySelector('#card-button-container').style.display = 'none';
+                    document.querySelector('#paypal-button-container').style.display = 'none';
+                }
+            });
+        });
+
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+            // Set up the transaction
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            currency_cod: 'USD',
+                            value: '0.01'
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    // Show a success message to the buyer
+                    $('#checkout-form').submit()
+                    varifyPaypal(orderId)
+                    alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                });
+            }
+        }).render('#paypal-button-container');
+    }
+
+    function varifyPaypal(orderId) {
+        $.ajax({
+            url: '/verify-payment',
+            data: {
+                orderId: orderId,
+            },
+            method: 'post',
+            success: (response) => {
+                if (response.status) {
+                    location.href = `/order-success/${orderId}`
+                } else {
+                    alert("payment failed")
+                }
+            }
+        })
+    }
+</script>
+
+
+
+
+ 

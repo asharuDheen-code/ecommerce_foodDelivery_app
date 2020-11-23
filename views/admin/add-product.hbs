@@ -1,29 +1,133 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css">
+
 <section>
     <div class="container mt-4">
-        <div class="row">
+        <div class="row" style="justify-content: center;">
             <div class="col-md-6">
                 <h2 class="text-center">Add Product</h2>
-                <form action="/admin/add-product" method="POST" enctype="multipart/form-data">
+                <form method="POST" action="/admin//add-product" enctype="multipart/form-data">
                     <label for="">Name</label>
                     <input type="text" name="name" class="form-control">
-                    <label for="">Category</label>
-                    <input type="text" name="category" class="form-control">
+                    {{!-- <label for="">Category</label> --}}
+                    <div style="margin-top: 20px; margin-bottom: 30px;">
+                        <label for="cars">Category:</label>
+                        <select name="category" id="cars" style="width: 125px;">
+                            <option value="Choose">Choose</option>
+                            <option value="NonVeg">Non Veg</option>
+                            <option value="Veg">Veg</option>
+                        </select>
+                    </div>
+                    {{!-- <input type="text" name="category" class="form-control"> --}}
                     <label for="">Price</label>
                     <input type="number" name="price" class="form-control">
-
                     <label for="">Image</label>
-                    <img src="/product-image/{{product._id}}.jpg" id="imgView" alt=""
-                        style="width: 100px; height: auto;" class="mt-4">
-                    <input type="file" name="Image" class="form-control mt-2" onchange="viewImage(event)">
-                    <button type="submit" class="btn btn-success mt-4">submitt</button>
+                    <img src="/product-image/{{product._id}}.jpg" id="cropped" alt=""
+                        style="width: 100px; height: auto;" class="cropped mt-4">
+
+                    <textarea name="imageCropp" id="imageBaseData" cols="30" rows="10" hidden></textarea>
+                    <img src="" id="cropped" class="cropped" alt="">
+
+                    <input id="file-input" type="file" name="Image" class="d-none form-control mt-2"
+                        onchange="viewImage(event)" capture>
+                    <div>
+                        <div>
+                            <button type="button" class="btn btn-outline-primary" id="profileImage">Add Image</button>
+                        </div>
+                        <div style="float: right;">
+                            <button type="submit" class="btn btn-success mt-4">submitt</button>
+                        </div>
+                    </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Crop Image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="result"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="load" class="btn btn-primary save">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js"></script>
+
+<script>
+    $("#profileImage").click(function (e) {
+        $("#file-input").click();
+    });
+
+    let result = document.querySelector('.result'),
+        save = document.querySelector('.save'),
+        cropped = document.querySelector('.cropped'),
+        upload = document.querySelector('#file-input'),
+        cropper = '';
+
+    upload.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            // start file reader
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (e.target.result) {
+                    // create new image
+                    $("#exampleModalCenter").modal("show");
+                    let img = document.createElement('img');
+                    img.id = 'image';
+                    img.src = e.target.result
+                    // clean result before
+                    result.innerHTML = '';
+                    // append new image
+                    result.appendChild(img);
+                    // init cropper
+                    cropper = new Cropper(img);
+                }
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    save.addEventListener('click', (e) => {
+        e.preventDefault();
+        // get result to data uri
+        let imgSrc = cropper.getCroppedCanvas({
+            width: 300 // img disp value
+        }).toDataURL();
+
+        $("#exampleModalCenter").modal("hide");
+        cropped.src = imgSrc;
+        $("#imageBaseData").val(imgSrc);
+
+    });
+
+</script>
+
+
+
+
 <script>
     function viewImage(event) {
-        document.getElementById("imgView").src = URL.createObjectURL(event.target.files[0]);
+        document.getElementById("cropped").src = URL.createObjectURL(event.target.files[0]);
     }
 </script>

@@ -1,3 +1,50 @@
 <h1>{{message}}</h1>
 <h2>{{error.status}}</h2>
 <pre>{{error.stack}}</pre>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<div id="" style="width: 50%;">
+    <canvas id="oilChart" width="600" height="400"></canvas>
+</div>
+
+<div>
+    <h1 id="userCount" val>Taotal Users: {{allUsers}}</h1>
+    <h1 id="userCount" val>Taotal Sales: {{allOrders}}</h1>
+    <h1 id="userCount" val>Taotal Products: {{allProducts}}</h1>
+</div>
+
+<script>
+    var oilCanvas = document.getElementById("oilChart");
+    
+    let users = {{allUsers}}
+    let orders = {{allOrders}}
+    let products = {{allProducts}}
+
+    Chart.defaults.global.defaultFontFamily = "Lato";
+    Chart.defaults.global.defaultFontSize = 18;
+
+    var oilData = {
+        labels: [
+            "Total Users",
+            "Total Orders",
+            "Total Products",
+        ],
+        datasets: [
+            {
+                data: [users, orders, products],
+                backgroundColor: [
+                    "#FF6384",
+                    "#63FF84",
+                    "#84FF63",
+                    
+                ],
+            },
+        ],
+    };
+
+    var pieChart = new Chart(oilCanvas, {
+        type: "pie",
+        data: oilData,
+    });
+</script>

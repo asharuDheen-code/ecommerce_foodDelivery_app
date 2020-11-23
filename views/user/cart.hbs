@@ -6,6 +6,10 @@
     .collapse {
         margin-right: 70px;
     }
+
+    .dropbtn {
+        margin-right: 60px;
+    }
 </style>
 
 <section>
@@ -46,7 +50,8 @@
                                 </button>
                             </div>
                             <div class="quantity">
-                                <button onclick="deleteOneItem('{{this._id}}','{{this.product._id}}')" id="" class="dltBtn">Delete</button>
+                                <button onclick="deleteOneItem('{{this._id}}','{{this.product._id}}')" id=""
+                                    class="dltBtn">Delete</button>
                             </div>
                         </div>
                         {{/each}}
@@ -63,22 +68,21 @@
         <script>
             function deleteOneItem(cartId, proId) {
                 if (confirm("Are you sure")) {
-                     $.ajax({
-                    url: '/delete-one-item',
-                    data: {
-                        cart: cartId,
-                        product: proId,
-                    },
-                    method: 'post',
-                    success: (response) => {
-                        if (response.removeProduct) {
-                            alert("Are you sure")
-                            location.reload()
+                    $.ajax({
+                        url: '/delete-one-item',
+                        data: {
+                            cart: cartId,
+                            product: proId,
+                        },
+                        method: 'post',
+                        success: (response) => {
+                            if (response.removeProduct) {
+                                alert("Are you sure")
+                                location.reload()
+                            }
                         }
-                    }
-                })
+                    })
                 }
-               
             }
         </script>
 

@@ -4,22 +4,34 @@ const productHelpers = require("../helpers/product-helpers");
 const adminHelpers = require("../helpers/admin-helpers");
 var router = express.Router();
 var productHelper = require("../helpers/product-helpers");
+var base64ToImage = require("base64-to-image");
 
 const adminUser = "a";
 const adminPassword = "a";
 
 /* GET users listing. */
-router.get("/", function (req, res, next) {
+router.get("/", async function (req, res, next) {
   res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
   res.setHeader("Pragma", "no-cache"); // HTTP 1.0.
   res.setHeader("Expires", "0"); // Proxies.
   if (req.session.loggedAdmin) {
-    adminHelpers.viewUser().then((users) => {
-      res.render("admin/view-users", { users, admin: true });
+    let allUsers = await adminHelpers.getAllUsers();
+    let allOrders = await adminHelpers.getAllOrders();
+    let allProducts = await adminHelpers.getAllProducts();
+    res.render("admin/dashboard", {
+      allUsers,
+      allOrders,
+      allProducts,
     });
   } else {
     res.render("admin/adminlogin");
   }
+});
+
+router.get("/view-users", (req, res) => {
+  adminHelpers.viewUser().then((users) => {
+    res.render("admin/view-users", { users, admin: true });
+  });
 });
 
 router.get("/view-product", (req, res) => {
@@ -29,25 +41,25 @@ router.get("/view-product", (req, res) => {
 });
 
 router.get("/add-product", function (req, res) {
-  res.render("admin/add-product");
+  res.render("admin/add-product", { admin: true });
 });
 
 router.post("/add-product", (req, res) => {
+  // let image = req.files.file;
   productHelpers.addProduct(req.body, (id) => {
-    let image = req.files.Image;
-    image.mv("./public/product-image/" + id + ".jpg", (err, done) => {
-      if (!err) {
-        res.redirect("/admin");
-      } else {
-        console.log(err);
-      }
-    });
+    var base64Str = req.body.imageCropp;
+    // console.log(base64Str);
+    var path = "./public/product-image/";
+    var optionalObj = { fileName: id, type: "jpg" };
+    base64ToImage(base64Str, path, optionalObj);
+    // let image = req.files.Image;
+    res.redirect("/admin/view-product");
   });
 });
 
 router.get("/edit-products/:id", async (req, res) => {
   let product = await productHelpers.getProductDetails(req.params.id);
-  res.render("admin/edit-products", { product });
+  res.render("admin/edit-products", { product, admin: true });
 });
 
 router.post("/edit-products/:id", (req, res) => {
@@ -63,7 +75,7 @@ router.post("/edit-products/:id", (req, res) => {
 router.get("/delete-product/:id", (req, res) => {
   let proId = req.params.id;
   productHelpers.deleteProduct(proId).then((response) => {
-    res.redirect("/admin/");
+    res.redirect("/admin/view-product");
   });
 });
 
@@ -74,7 +86,7 @@ router.get("/view-users", (req, res) => {
 });
 
 router.get("/add-users", function (req, res) {
-  res.render("admin/add-users");
+  res.render("admin/add-users", { admin: true });
 });
 
 router.post("/add-users", (req, res) => {
@@ -98,7 +110,7 @@ router.get("/delete-users", (req, res) => {
 
 router.get("/edit-users/:id", async (req, res) => {
   let user = await adminHelpers.getUserDetails(req.params.id);
-  res.render("admin/edit-users", { user });
+  res.render("admin/edit-users", { user, admin: true });
 });
 
 router.post("/edit-products/:id", (req, res) => {
@@ -128,7 +140,6 @@ router.post("/edit-users/:id", (req, res) => {
 
 router.get("/order-details", async (req, res) => {
   let orders = await adminHelpers.getUserOrder();
-  console.log(orders);
   res.render("admin/view-orders", { orders });
 });
 
@@ -142,7 +153,7 @@ router.get("/adminlogin", (req, res) => {
   res.setHeader("Pragma", "no-cache"); // HTTP 1.0.
   res.setHeader("Expires", "0"); // Proxies.
   if (req.session.loggedAdmin) {
-    res.render("admin/view-users");
+    res.redirect("/admin");
   } else {
     res.render("admin/adminlogin");
   }
@@ -154,17 +165,49 @@ router.post("/adminlogin", (req, res) => {
   res.setHeader("Expires", "0"); // Proxies.
   if (req.body.email === adminUser && req.body.password === adminPassword) {
     req.session.loggedAdmin = true;
-
     if (req.session.loggedAdmin) {
-      adminHelpers.viewUser().then((users) => {
-        res.render("admin/view-users", { users, admin: true });
-      });
+      res.redirect("/admin");
     } else {
-      res.redirect("/");
+      res.render("admin/adminlogin");
     }
-  } else {
-    res.render("admin/adminlogin");
   }
+});
+
+router.get("/verify-sucessoOrder/:id", async (req, res) => {
+  let orders = await adminHelpers.getUserOrder();
+  let orderId = req.params.id;
+  adminHelpers.changeSuccessOrderStatus(orderId).then((status) => {
+    res.render("admin/view-orders", { orders });
+  });
+});
+
+router.get("/verify-cancelOrder/:id", async (req, res) => {
+  let orders = await adminHelpers.getUserOrder();
+  let orderId = req.params.id;
+  adminHelpers.changeCancelOrderStatus(orderId).then((status) => {
+    res.render("admin/view-orders", { orders });
+  });
+});
+
+router.get("/dashboard", async (req, res) => {
+  let allUsers = await adminHelpers.getAllUsers();
+  let allOrders = await adminHelpers.getAllOrders();
+  let allProducts = await adminHelpers.getAllProducts();
+  res.render("admin/dashboard", { allUsers, allOrders, allProducts });
+});
+
+router.get("/report", (req, res) => {
+  res.render("admin/report");
+});
+
+router.post("/reports", async (req, res) => {
+  let date = req.body.date
+  let allDatas = await adminHelpers.getAllDatas(date).then((reports) => {
+    console.log("reportssssss", reports);
+    // res.render("admin/report", { reports })
+    res.json(reports)
+  })
+  // res.render("admin/report");
 });
 
 module.exports = router;

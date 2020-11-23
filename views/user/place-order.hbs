@@ -1,4 +1,122 @@
 <link rel="stylesheet" href="/stylesheets/place-order.css">
+
+<style>
+    .dropbtn {
+        background: #f8f9fa;
+        margin-top: -2px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1rem;
+        font-weight: 400;
+    }
+
+    /* Base for label styling */
+    [type="checkbox"]:not(:checked),
+    [type="checkbox"]:checked {
+        position: absolute;
+        left: -9999px;
+    }
+
+    [type="checkbox"]:not(:checked)+label,
+    [type="checkbox"]:checked+label {
+        position: relative;
+        padding-left: 1.95em;
+        cursor: pointer;
+    }
+
+    /* checkbox aspect */
+    [type="checkbox"]:not(:checked)+label:before,
+    [type="checkbox"]:checked+label:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1.25em;
+        height: 1.25em;
+        border: 2px solid #ccc;
+        background: #fff;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* checked mark aspect */
+    [type="checkbox"]:not(:checked)+label:after,
+    [type="checkbox"]:checked+label:after {
+        content: "\2713\0020";
+        position: absolute;
+        top: 0.15em;
+        left: 0.22em;
+        font-size: 1.3em;
+        line-height: 0.8;
+        color: #09ad7e;
+        transition: all 0.2s;
+        font-family: "Lucida Sans Unicode", "Arial Unicode MS", Arial;
+    }
+
+    /* checked mark aspect changes */
+    [type="checkbox"]:not(:checked)+label:after {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    [type="checkbox"]:checked+label:after {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* disabled checkbox */
+    [type="checkbox"]:disabled:not(:checked)+label:before,
+    [type="checkbox"]:disabled:checked+label:before {
+        box-shadow: none;
+        border-color: #bbb;
+        background-color: #ddd;
+    }
+
+    [type="checkbox"]:disabled:checked+label:after {
+        color: #999;
+    }
+
+    [type="checkbox"]:disabled+label {
+        color: #aaa;
+    }
+
+    /* accessibility */
+    [type="checkbox"]:checked:focus+label:before,
+    [type="checkbox"]:not(:checked):focus+label:before {
+        border: 2px dotted blue;
+    }
+
+    /* hover style just for information */
+    label:hover:before {
+        border: 2px solid #4778d9 !important;
+    }
+
+    /* Useless styles, just for demo design */
+
+    .checkBox {
+        width: 7em;
+        margin: 0 auto;
+    }
+
+    .checkBtn {
+        padding-top: 5px;
+    }
+
+    .oldAdress {
+        display: grid;
+        justify-content: center;
+        padding-top: 25px;
+    }
+
+    .lastAddress {
+        font-size: 1.5rem;
+        line-height: inherit;
+    }
+
+    .old {
+        margin-bottom: 10px;
+    }
+</style>
+
 <section class="" style="padding-top: 30px;">
     <div class="container">
         <div class="title">
@@ -10,25 +128,50 @@
                     <div class="formSection">
                         <label>
                             <span class="fname">First Name <span class="required">*</span></span>
-                            <input type="text" name="fname">
+                            <input id="fname" value="" type="text" name="fname">
                         </label>
                         <label>
                             <span class="lname">Last Name <span class="required">*</span></span>
-                            <input type="text" name="lname">
+                            <input id="lname" value="" type="text" name="lname">
                         </label>
                         <label>
                             <span>Street Address <span class="required">*</span></span>
-                            <input type="text" name="address" placeholder="street name" required>
+                            <input id="address" value="" type="text" name="address" placeholder="street name" required>
                         </label>
                         <label>
                             <span>Phone <span class="required">*</span></span>
-                            <input type="tel" name="mobile">
+                            <input id="mobile" value="" type="tel" name="mobile">
                         </label>
                         <label>
                             <span>Email Address <span class="required">*</span></span>
-                            <input type="email" name="email">
+                            <input id="email" value="" type="email" name="email">
                             <input type="text" name="userId" value="{{user._id}}" hidden>
                         </label>
+                        <div class="checkBtn">
+                            <form class="checkBox" action="#">
+                                <input type="checkbox" id="test1" />
+                                <label class="checkBoxLab" for="test1">Save Your address</label>
+                            </form>
+                        </div>
+                        <div class="oldAdress">
+                            <h4 class="lastAddress">Last few Addresses</h4>
+                            {{#each address}}
+                            <div style="display: list-item;">
+                                <div class="old">
+                                    <p>{{this.deliveryDetails.name}}</p>
+                                    <p>{{this.deliveryDetails.address}}</p>
+                                    <p>{{this.deliveryDetails.mobile}}</p>
+                                    <p>{{this.deliveryDetails.email}}</p>
+                                </div>
+                                <div>
+                                    <a href="/place-order" style="float: right;" class="btn btn-success">Use</a>
+                                    <butto id="ids" style="float: right;" class="btn btn-success" onclick="addresss('{{this.deliveryDetails.name}}', '{{this.deliveryDetails.address}}', 
+                                    '{{this.deliveryDetails.mobile}}', '{{this.deliveryDetails.email}}')">Use
+                                    </butto>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
                     </div>
                     <div class="Yorder">
                         <table>
@@ -49,7 +192,7 @@
                             </tr>
                         </table><br>
                         <div>
-                            <input type="radio" name="payment-method" value="COD"> Cash on Delivery
+                            <input type="radio" name="payment-method" value="COD"> COD
                         </div>
                         <div>
                             <input type="radio" name="payment-method" value="RazorPay"> RazorPay <span>
@@ -58,80 +201,97 @@
                             </span>
                         </div>
                         <div>
-                            <input type="radio" name="payment-method" value="PayPal" checked> PayPal <span>
+                            <input type="radio" name="payment-method" value="PayPal"> PayPal <span>
                                 <img src="https://www.logolynx.com/images/logolynx/c3/c36093ca9fb6c250f74d319550acac4d.jpeg"
                                     alt="" width="50">
                             </span>
                         </div>
+
                         <div id="paypal-button-container" class="" style="display: flex; width: 100%;"></div>
-                        <button id="card-button-container" type="submit">Place Order</button>
+
+                        <div id="orderBtn" style="width: 100%;">
+                            <button id="place-order" onclick="myFunction()" style="font-family: sans-serif;">palace
+                                order</button>
+                        </div>
+                        {{!-- <div>
+                            <button id="cards-button-container" type="submit"
+                                style="display: none; font-family: sans-serif;">Cash on Delivery</button>
+                        </div> --}}
+
                     </div><!-- Yorder -->
                 </div>
             </form>
         </div>
     </div>
 
-    {{!-- <label>
-        <input type="radio" name="payment-method" value="PayPal" checked>
-        <img src="/demo/checkout/static/img/paypal-mark.jpg" alt="Pay with Paypal">
-    </label>
+</section>
 
-    <label>
-        <input type="radio" name="payment-method" value="RazorPay">
-        <img src="/demo/checkout/static/img/card-mark.png"
-            alt="Accepting Visa, Mastercard, Discover and American Express">
-    </label> --}}
-    {{!-- 
-    <div id="paypal-button-container"></div>
-    <div id="card-button-container" class="hidden"><button>Continue</button></div> --}}
+<script>
+    function addresss(name, address, mobile, email) {
+        document.getElementById("fname").value = name
+        document.getElementById("address").value = address
+        document.getElementById("mobile").value = mobile
+        document.getElementById("email").value = email
+    }
+</script>
 
-    <!-- Include the PayPal JavaScript SDK -->
+{{!-- /*******Check Button --}}
+<script>
+    function myFunction() {
+        var checkBox = document.getElementById("test1");
+        var text = document.getElementById("text");
+        if (checkBox.checked == true) {
+            document.getElementById("checkout-form").submit();
+        } else {
+            document.getElementById("fname").name = ""
+            document.getElementById("lname").name = ""
+            document.getElementById("address").name = ""
+            document.getElementById("mobile").name = ""
+            document.getElementById("email").name = ""
+            document.getElementById("checkout-form").submit();
+        }
+    }
+</script>
 
-    <script
-        src="https://www.paypal.com/sdk/js?client-id=AWkDECW5hnJ1X3ojd_5GGIGVlyJDYP8TMSIg1_r2Zq2l0A023x08eboig1GyQkvo-hdYm3LkLVO2Gpd9&currency=USD"></script>
+    {{!-- //*********Paypal integration************\\ --}}
 
-    <script>
-        // Listen for changes to the radio fields
-        document.querySelectorAll('input[name=payment-method]').forEach(function (el) {
-            el.addEventListener('change', function (event) {
+<script>
 
-                // If PayPal is selected, show the PayPal button
-                if (event.target.value === 'PayPal') {
-                    document.querySelector('#card-button-container').style.display = 'none';
-                    document.querySelector('#paypal-button-container').style.display = 'inline-block';
+    $('#checkout-form').submit((e) => {
+        e.preventDefault()
+        $.ajax({
+            url: '/place-order', 
+            method: 'post',
+            data: $('#checkout-form').serialize(), // SERIALIZE Geting all data from a form
+            success: (response) => {
+                // alert(response)
+
+                if (response.codSuccess) {
+                    let id = response.codSuccess
+                    location.href = `/order-success/${id}`
                 }
 
-                // If Card is selected, show the standard continue button
-                if (event.target.value === 'RazorPay' || event.target.value === 'COD') {
-                    document.querySelector('#card-button-container').style.display = 'inline-block';
-                    document.querySelector('#paypal-button-container').style.display = 'none';
+                else if (response.Razorpay) {
+                    let orderId = response.Razorpay
+                    console.log("idddddddddddd", orderId)
+                    razorpayPayment(orderId)
                 }
-            });
-        });
 
-        // Hide Non-PayPal button by default
-        document.querySelector('#card-button-container').style.display = 'none';
+                else if (response.Paypal) {
+                    //worked()
+                    document.querySelector('#orderBtn').style.display = "none";
+                    let id = response.Paypal.id;
+                    let amount = response.Paypal.amount;
+                    paypalPayment(id, amount);
 
-        // Render the PayPal button into #paypal-button-container
-        // Render the PayPal button into #paypal-button-container
-        paypal.Buttons({
-            style: {
-                color: 'blue',
-                shape: 'pill',
-                label: 'pay',
-                height: 40
+                }
             }
+        })
+    })
 
-        }).render('#paypal-button-container');
-    </script>
 
-    {{!-- <div id="paypal-button-container"></div>
+    function paypalPayment(id, amount) {
 
-    <!-- Include the PayPal JavaScript SDK -->
-    <script
-        src="https://www.paypal.com/sdk/js?client-id=AWkDECW5hnJ1X3ojd_5GGIGVlyJDYP8TMSIg1_r2Zq2l0A023x08eboig1GyQkvo-hdYm3LkLVO2Gpd9&currency=USD"></script>
-
-    <script>
         // Render the PayPal button into #paypal-button-container
         paypal.Buttons({
 
@@ -140,7 +300,8 @@
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: '100000'
+                            currency_cod: 'USD',
+                            value: amount
                         }
                     }]
                 });
@@ -149,84 +310,79 @@
             // Finalize the transaction
             onApprove: function (data, actions) {
                 return actions.order.capture().then(function (details) {
-                    console.log(details)
-
-                    // Show a success message to the buyer
-                    alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                    alert('Transaction completed by ' + details.payer.name.given_name + '!')
+                    verifyPaypal(id)
                 });
             }
-
-
         }).render('#paypal-button-container');
-    </script>
-</section> --}}
+    }
 
-    {{!-- //RAZORPAY Payment integeration  --}}
-
-    <script>
-        $('#checkout-form').submit((e) => {
-            e.preventDefault()
-            $.ajax({
-                url: '/place-order',
-                method: 'post',
-                data: $('#checkout-form').serialize(), // SERIALIZE Geting all data from a form
-                success: (response) => {
-                    alert(response)
-                    if (response.codSuccess) {
-                        let id = response.codSuccess
-                        location.href = `/order-success/${id}`
-                    } else {
-                        razorpayPayment(response)
-                    }
+    function verifyPaypal(id) { 
+        $.ajax({
+            url: '/verify-paypal',
+            data: {
+                orderId: id,
+            },
+            method: 'post',
+            success: (response) => {
+                if (response) {
+                    location.href = `/order-success/${id}`
+                } else {
+                    alert("payment failed")
                 }
-            })
+            }
         })
+    }
 
 
-        function razorpayPayment(order) {
-            var options = {
-                "key": "rzp_test_CyyEWbJn9u0YOv", // Enter the Key ID generated from the Dashboard
-                "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-                "currency": "INR",
-                "name": "clouD techI onE",
-                "description": "Test Transaction",
-                "image": "https://example.com/your_logo",
-                "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-                "handler": function (response) {
-                    verifyPayment(response, order)
-                },
-                "prefill": {
-                    "name": "Gaurav Kumar",
-                    "email": "gaurav.kumar@example.com",
-                    "contact": "9999999999"
-                },
-                "notes": {
-                    "address": "Razorpay Corporate Office"
-                },
-                "theme": {
-                    "color": "#3399cc"
+    //RazorPay integration
+
+    function razorpayPayment(order) {
+
+        var options = {
+            "key": "rzp_test_CyyEWbJn9u0YOv", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "clouD techI onE",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+                verifyPayment(response, order)
+            },
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9999999999"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+
+    function verifyPayment(payment, order) {
+        $.ajax({
+            url: '/verify-payment',
+            data: {
+                payment,
+                order,
+            },
+            method: 'post',
+            success: (response) => {
+                if (response) {
+                    let id = response.success
+                    location.href = `/order-success/${id}`
+                } else {
+                    alert("payment failed")
                 }
-            };
-            var rzp1 = new Razorpay(options);
-            rzp1.open();
-        }
+            }
+        })
+    }
 
-        function verifyPayment(payment, order) {
-            $.ajax({
-                url: '/verify-payment',
-                data: {
-                    payment,
-                    order,
-                },
-                method: 'post',
-                success: (response) => {
-                    if (response.status) {
-                        let id = response.status
-                        location.href = `/order-success/${id}`
-                    } else {
-                        alert("payment failed")
-                    }
-                }
-            })
-        }
-    </script>
+</script>
