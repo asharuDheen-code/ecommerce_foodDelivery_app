@@ -1,0 +1,88 @@
+<script>
+    db.collection.aggregate([
+        // First total per day. Rounding dates with math here
+        {
+            "$group": {
+                "_id": {
+                    "$add": [
+                        {
+                            "$subtract": [
+                                { "$subtract": ["$createdAt", new Date(0)] },
+                                {
+                                    "$mod": [
+                                        { "$subtract": ["$createdAt", new Date(0)] },
+                                        1000 * 60 * 60 * 24
+                                    ]
+                                }
+                            ]
+                        },
+                        new Date(0)
+                    ]
+                },
+                "week": { "$first": { "$week": "$createdAt" } },
+                "month": { "$first": { "$month": "$createdAt" } },
+                "total": { "$sum": "$num" }
+            }
+        },
+
+        // Then group by week
+        {
+            "$group": {
+                "_id": "$week",
+                "month": { "$first": "$month" },
+                "days": {
+                    "$push": {
+                        "day": "$_id",
+                        "total": "$total"
+                    }
+                },
+                "total": { "$sum": "$total" }
+            }
+        },
+
+        // Then group by month
+        {
+            "$group": {
+                "_id": "$month",
+                "weeks": {
+                    "$push": {
+                        "week": "$_id",
+                        "total": "$total",
+                        "days": "$days"
+                    }
+                },
+                "total": { "$sum": "$total" }
+            }
+        }
+    ])
+</script>
+
+<script>
+        // First total per day. Rounding dates with math here
+    db.order.aggregate([
+        {
+            "$group": {
+                "_id": {
+                    "$add": [
+                        {
+                            "$subtract": [
+                                { "$subtract": ["$createdAt", new Date(0)] },
+                                {
+                                    "$mod": [
+                                        { "$subtract": ["$createdAt", new Date(0)] },
+                                        1000 * 60 * 60 * 24
+                                    ]
+                                }
+                            ]
+                        },
+                        new Date(0)
+                    ]
+                },
+                "week": { "$first": { "$week": "$createdAt" } },
+                "month": { "$first": { "$month": "$createdAt" } },
+                "total": { "$sum": "$num" }
+            }
+        },
+    ])
+
+</script>

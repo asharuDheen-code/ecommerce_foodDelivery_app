@@ -27,6 +27,7 @@
                                 </div>
                             </div>
                             <li><a href="/admin"><span id="dashboard">Dashboared</span></a></li>
+                            <li><a href="/admin/report">Dily Report</a></li>
                             <li><a href="/admin/view-users">User Details</a></li>
                             <li><a href="/admin/view-product">Product Details</a></li>
                             <li><a href="/admin/order-details">Order Details</a></li>
@@ -53,8 +54,6 @@
                 <input type="date" id="calendar" name="calendar" value=" " min="" max="">
                 {{!-- button --}}
                 <input type="button" value="submit" id="dateButton">
-                {{!-- input  --}}
-                <input type="" value="" id="dateResult">
 
                 <table id="example" class="table table-striped table-bordered" style="">
                     <thead>
@@ -65,7 +64,6 @@
                             <th>Date</th>
                             <th>Order Status</th>
                             <th>Total Price</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     {{!-- <tbody id="values">
@@ -99,7 +97,6 @@
                             <th>Date</th>
                             <th>Order Status</th>
                             <th>Total Price</th>
-                            <th>Action</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -110,34 +107,11 @@
             </div>
         </div>
     </div>
-
 </header>
 
 <script>
+
     $("#dateButton").click(function (e) {
-
-        let datedatas = ` <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>₹</td>
-                            <td>
-                                <div style="display: flex;">
-                                    <div style="margin-right: 5px;">
-                                        <a href="/admin/verify-sucessoOrder/{{this._id}}"
-                                            class="btn btn-success">Accept</a>
-                                    </div>
-                                    <div>
-                                        <a href="/admin/verify-cancelOrder/{{this._id}}"
-                                            class="btn btn-danger">Cancel</a>
-                                    </div>
-                                </div>
-                            </td>
-                    </tr>  `
-
-
 
         let date = $("#calendar").val();
         $.ajax({
@@ -149,12 +123,11 @@
 
             success: (response) => {
                 let length = Object.keys(response).length
+                document.querySelector('.odd').style.display = 'none';
+                document.querySelector('.dataTables_length').style.display = 'none';
+                document.querySelector('.dataTables_filter').style.display = 'none';
 
-                alert("kayari")
-
-                document.getElementsByClassName("odd") = none
                 for (var i = 0; i < length; i++) {
-                    alert("akath kayaritto")
                     let reports = response[i]
                     var datas = {
                         i: {

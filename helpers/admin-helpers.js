@@ -135,13 +135,11 @@ module.exports = {
                   $set: {
                     username: userDetails.username,
                     email: userDetails.email,
-                    // password: userDetails.password,
                   },
                 }
               )
               .then((data) => {
                 console.log("data.user.ok");
-                //   console.log(data.user.ok);
                 console.log(data);
                 resolve({ status: data.result.ok });
               });

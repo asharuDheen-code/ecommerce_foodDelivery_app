@@ -210,4 +210,7 @@ router.post("/reports", async (req, res) => {
   // res.render("admin/report");
 });
 
+router.get("/test", (req, res) => {
+  res.render("admin/test")
+})
 module.exports = router;

@@ -25,6 +25,7 @@
     "razorpay": "^2.0.6"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^7.0.0-rc.0",
     "nodemon": "^2.0.6"
   }
 }

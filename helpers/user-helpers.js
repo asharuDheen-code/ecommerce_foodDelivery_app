@@ -7,6 +7,8 @@ var objectId = require("mongodb").ObjectID;
 const Razorpay = require("razorpay");
 const { resolve } = require("path");
 let moment = require("moment");
+let format2 = "YYYY-MM-DD";
+const cucumber = require("@cucumber/cucumber");
 
 var instance = new Razorpay({
   key_id: "rzp_test_CyyEWbJn9u0YOv",
@@ -274,17 +276,17 @@ module.exports = {
 
   placeOrder: (order, products, total) => {
     return new Promise((resolve, reject) => {
-      const format2 = "YYYY-MM-DD";
-
       let fullDate = moment().format("MMMM Do YYYY, h:mm:ss a");
       let day = moment().format("dddd");
       let time = moment().format("LTS");
       let date = moment().format(format2);
 
       let status = order.paymentMethod === "COD" ? "placed" : "pending";
+
       let orderObj = {
         deliveryDetails: {
-          name: order.fname,
+          firstName: order.fname,
+          lastName: order.lname,
           mobile: order.mobile,
           email: order.email,
           address: order.address,
@@ -457,15 +459,15 @@ module.exports = {
     });
   },
 
-  getOneUser: (userId) => {
+  getUser: (userId) => {
     return new Promise(async (resolve, reject) => {
-      await db
+      let data = await db
         .get()
         .collection(collection.USER_COLLECTION)
-        .findOne({ _id: objectId(userId) })
-        .then((user) => {
-          console.log(user);
-          resolve(user);
+        .find({ _id: objectId(userId) })
+        .toArray()
+        .then((response) => {
+          resolve(response[0]);
         });
     });
   },
@@ -545,6 +547,79 @@ module.exports = {
           resolve(response);
         });
       // resolve(response)
+    });
+  },
+
+  saveAddress: (address) => {
+    db.get().collection(collection.ADDRESS_COLLECTION).insertOne(address);
+  },
+
+  getAllAddress: () => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.ADDRESS_COLLECTION)
+        .find()
+        .toArray()
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+
+  editAddress: (userId, newAddress) => {
+    return new Promise((resolve, reject) => {
+      console.log("agaiiiiiiiiiiiiiiiiiiiin", newAddress);
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .findOneAndUpdate(
+          { _id: objectId(userId) },
+          {
+            $set: {
+              username: newAddress.name,
+              email: newAddress.email,
+            },
+          }
+        )
+        .then((response) => {
+          db.get()
+            .collection(collection.USER_COLLECTION)
+            .findOne({ _id: objectId(userId) })
+            .then((responses) => {
+              console.log("puthiyathhhhh", responses);
+              resolve(responses);
+            });
+        });
+    });
+  },
+
+  editAddresses: (userId, newAddress) => {
+    return new Promise((resolve, reject) => {
+      let address = {
+        fname: newAddress.fname,
+        lname: newAddress.lname,
+        address: newAddress.address,
+        mobile: newAddress.mobile,
+        email: newAddress.email,
+        userId: userId,
+      };
+      db.get()
+        .collection(collection.ADDRESS_COLLECTION)
+        .insertOne(address)
+        .then((response) => {
+          resolve({ address: response.ops[0] });
+        });
+    });
+  },
+
+  getAllSavedAddresses: (id) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.ADDRESS_COLLECTION)
+        .find({ userId: id })
+        .toArray()
+        .then((response) => {
+          resolve(response);
+        });
     });
   },
 };

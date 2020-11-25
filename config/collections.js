@@ -3,4 +3,5 @@ module.exports = {
   USER_COLLECTION: "user",
   CART_COLLECTION: "cart",
   ORDER_COLLECTION: "order",
+  ADDRESS_COLLECTION: "userAddress"
 };
