@@ -13,8 +13,9 @@
                         <label for="cars">Category:</label>
                         <select name="category" id="cars" style="width: 125px;">
                             <option value="Choose">Choose</option>
-                            <option value="NonVeg">Non Veg</option>
-                            <option value="Veg">Veg</option>
+                            {{#each response}}
+                            <option value="NonVeg">{{this.category}}</option>
+                            {{/each}}
                         </select>
                     </div>
                     {{!-- <input type="text" name="category" class="form-control"> --}}

@@ -122,6 +122,7 @@
             method: 'post',
 
             success: (response) => {
+                console.log("hiiiiiiiiiiiiiiiiiiii", response)
                 let length = Object.keys(response).length
                 document.querySelector('.odd').style.display = 'none';
                 document.querySelector('.dataTables_length').style.display = 'none';
@@ -132,8 +133,8 @@
                     var datas = {
                         i: {
                             name: reports.deliveryDetails.name,
-                            mobile: reports.deliveryDetails.mobile,
-                            orderId: reports._id,
+                            mobil: reports.deliveryDetails.mobile,
+                            orderId: reports._id, 
                             date: reports.date,
                             ordereStatus: reports.status,
                             total: reports.total

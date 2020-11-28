@@ -9,6 +9,7 @@ const { resolve } = require("path");
 let moment = require("moment");
 let format2 = "YYYY-MM-DD";
 const cucumber = require("@cucumber/cucumber");
+const { promises } = require("dns");
 
 var instance = new Razorpay({
   key_id: "rzp_test_CyyEWbJn9u0YOv",
@@ -16,7 +17,10 @@ var instance = new Razorpay({
 });
 
 module.exports = {
-  doSignup: (userData) => {
+  doSignup: (userDatas) => {
+    let userBlock = false;
+    let userData = { ...userDatas, userBlock };
+    console.log("signuppppppp", userData);
     return new Promise(async (resolve, reject) => {
       await db
         .get()
@@ -291,7 +295,7 @@ module.exports = {
           email: order.email,
           address: order.address,
         },
-        fulldate: fullDate,
+        fulldate: new Date(),
         day: day,
         date: date,
         time: time,
@@ -577,6 +581,7 @@ module.exports = {
             $set: {
               username: newAddress.name,
               email: newAddress.email,
+              mobile: newAddress.mobile,
             },
           }
         )
@@ -622,4 +627,53 @@ module.exports = {
         });
     });
   },
+
+  addNewAddress: (address) => {
+    console.log("dsafsadg", address);
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.ADDRESS_COLLECTION)
+        .insertOne(address)
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+
+  checkUser: (email) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .findOne({ email: email })
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+
+  checkMobileNumber: (number) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .findOne({ mobile: number })
+        .then((details) => {
+          if (details != null) {
+            console.log("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnot", details);
+            resolve({details: details});
+          } else {
+            console.log("detailsssssssssUser", details);
+            resolve({details: null});
+          }
+        });
+    });
+  },
+
+  getOneUser: (mobileNum) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.USER_COLLECTION)
+      .findOne({mobile: mobileNum}).then((response) => {
+        resolve(response)
+      })
+    })
+  }
 };

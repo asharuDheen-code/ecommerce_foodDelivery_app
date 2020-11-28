@@ -270,3 +270,39 @@
         });
     })();
 </script>
+
+<script>
+    router.post("/otpVerify", (req, res) => {
+        console.log("aahahhahahahhahaaaaaaaaaaaa" req.body)
+        var request = require("request");
+        var options = {
+            method: "POST",
+            url: "https://d7networks.com/api/verifier/verify",
+            headers: {
+                Authorization: "Token c8c07b4146aaffb1c1901446a6997e334d0b1778",
+            },
+            formData: {
+                otp_id: req.body.optId,
+                otp_code: req.body.otpNum,
+            },
+        };
+        request(options, function (error, response) {
+            if (error) throw new Error(error);
+            console.log("ooooooooooooooooooooooo", response.body);
+            let result = JSON.parse(response.body);
+            let status = result.status;
+            let errorMsg = result.error
+            console.log("staaaaaaaaaaaaaaaatus", status);
+            console.log("eeeeeeeeeeeeeeeerrrrrror", errorMsg);
+            if (status == "success") {
+                userHelpers.getOneUser(req.body.mobileNumber).then((userData) => {
+                    req.session.loggedIn = true;
+                    req.session.user = userData;
+                    res.json({ "status": "success", "errorMsg": errorMsg })
+                });
+            }
+        });
+    });
+
+    {"status":"failed","error":"Otp code expired."}
+</script>

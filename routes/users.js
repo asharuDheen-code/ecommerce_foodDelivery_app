@@ -17,6 +17,21 @@ const varifyLogin = (req, res, next) => {
   }
 };
 
+const checkUser = (req, res, next) => {
+  let userId = req.session.user._id;
+  userHelpers.checkUser(userId).then((userDetails) => {
+    console.log("ddddddddddddddd", us);
+  });
+};
+
+router.post("/checkUser", (req, res) => {
+  let email = req.body;
+  console.log("emaillllllllll", email);
+  userHelpers.checkUser(email).then((userDetails) => {
+    console.log("ddddddddddddddd", userDetails);
+  });
+});
+
 /* GET home page. */
 router.get("/", async function (req, res, next) {
   res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
@@ -24,13 +39,12 @@ router.get("/", async function (req, res, next) {
   res.setHeader("Expires", "0"); // Proxies.
   let user = req.session.user;
   let cartCount = null;
-
   if (req.session.user) {
     cartCount = await userHelpers.getCartCount(req.session.user._id);
   }
-
   productHelpers.getAllProducts().then((products) => {
     if (req.session.loggedIn) {
+      console.log("loginnnnnnnnnnnnssss", req.session.loggedIn);
       res.render("user/view-products", { products, user, cartCount });
     } else {
       res.render("user/userlogin", {
@@ -227,12 +241,19 @@ router.get("/test", (req, res) => {
   res.render("user/test");
 });
 
-router.post("/addNewAddress", varifyLogin, (req, res) => {
-  console.log("kayariiiiiiiiiiiiiiiiiiiiiiiiii");
+router.post("/addAddress", varifyLogin, (req, res) => {
+  // let userId = req.session.user._id;
+  let address = req.body;
+  console.log("firstdfsgfsr", address);
+  userHelpers.addNewAddress(address).then((data) => {
+    res.redirect("/profile");
+  });
+});
+
+router.post("/editAddress", varifyLogin, (req, res) => {
   let userId = req.session.user._id;
   let newAddress = req.body;
   userHelpers.editAddress(userId, newAddress).then((responses) => {
-    console.log("ippooozatheethhhhh", responses);
     res.json(responses);
   });
 });
@@ -242,8 +263,11 @@ router.get("/profile", varifyLogin, (req, res) => {
     .getAllSavedAddresses(req.session.user._id)
     .then((allAddresses) => {
       userHelpers.getUser(req.session.user._id).then((profile) => {
-        console.log("profileeeeeeeee", profile);
-        res.render("user/profile", { user: req.session.user, profile, allAddresses });
+        res.render("user/profile", {
+          user: req.session.user,
+          profile,
+          allAddresses,
+        });
       });
     });
 });
@@ -285,5 +309,73 @@ router.get("/vegCategory", varifyLogin, async (req, res) => {
     });
   });
 });
+
+// OTP Varification
+
+router.post("/checkMobile", (req, res) => {
+  let mobileNumber = req.body.mobileNumber;
+  userHelpers.checkMobileNumber(mobileNumber).then((details) => {
+    res.json(details);
+  });
+});
+
+router.get("/pickMe", (res, req) => {
+  console.log("its fineeeeeeeeeeeeeeeeeeeeeeee");
+});
+
+router.post("/callOtp", (req, res) => {
+  var request = require("request");
+  var options = {
+    method: "POST",
+    url: "https://d7networks.com/api/verifier/send",
+    headers: {
+      Authorization: "Token c8c07b4146aaffb1c1901446a6997e334d0b1778",
+    },
+    formData: {
+      mobile: 91 + req.body.mobileNumber,
+      sender_id: "SMSINFO",
+      message: "Your otp code is {code}",
+      expiry: "9000",
+    },
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    let id = JSON.parse(response.body);
+    let otpId = id.otp_id;
+    console.log("idddddddonly", id);
+    res.json(otpId);
+  });
+});
+
+router.post("/otpVerify", (req, res) => {
+  var request = require("request");
+  var options = {
+    method: "POST",
+    url: "https://d7networks.com/api/verifier/verify",
+    headers: {
+      Authorization: "Token c8c07b4146aaffb1c1901446a6997e334d0b1778",
+    },
+    formData: {
+      otp_id: req.body.otpId,
+      otp_code: req.body.otpNum,
+    },
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    console.log("firrrrrrrrrrrrrst", response.body);
+    let result = JSON.parse(response.body);
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaha", result);
+    if (result.status == "success") {
+      userHelpers.getOneUser(req.body.mobileNumber).then((userData) => {
+        req.session.loggedIn = true;
+        req.session.user = userData;
+        res.json({ status: true});
+      });
+    } else {
+      res.json({ status: false, errMsg: result.error });
+    }
+  });
+});
+// END OTP Varification
 
 module.exports = router;

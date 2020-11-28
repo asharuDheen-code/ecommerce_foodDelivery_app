@@ -1,9 +1,9 @@
-<section> 
+<section>
     <div class="container" style="display: flex; justify-content: center; max-width: 100%;">
         <div class="col-lg-8 col-lg-offset-2">
             <h1>User Section</h1>
             <div class="row mt-4">
-                <a href="/admin/add-users" class="btn btn-success ml-auto">Add user</a>
+                <a href="/admin/addCategory" class="btn btn-success ml-auto">Add Category</a>
             </div>
             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."
                 title="Type in a name">
@@ -12,24 +12,20 @@
                 <thead>
                     <tr>
                         <th scope="col">No</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Email</th>
+                        <th scope="col">Category</th>
+                        {{!-- <th scope="col">Email</th> --}}
                         {{!-- <th scope="col">password</th> --}}
                         {{!-- <th scope="col">Image</th> --}}
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each users}}
+                    {{#each categories}}
                     <tr>
                         <th scope="row"> {{@index}} </th>
-                        <td>{{this.username}}</td>
-                        <td>{{this.email}}</td>
-                        {{!-- <td>{{this.password}}</td> --}}
-                        {{!-- <td><img style="width: 50px; heigth: 50px" src="/product-image/{{this._id}}.jpg" alt=""> </td> --}}
+                        <td>{{this.category}}</td>
                         <td>
-                            <a href="/admin/blockUser/{{this._id}}" class="btn btn-danger">block</a>
-                            <a href="/admin/edit-users/{{this._id}}" class="btn btn-primary">Edit</a>
-                            <a href="/admin/delete-users?id={{this._id}}" class="btn btn-danger"
+                            <a href="/admin/editCategory/{{this._id}}" class="btn btn-primary">Edit</a>
+                            <a href="/admin/deleteCategory?id={{this._id}}" class="btn btn-danger"
                                 onclick="return confirm('are you sure want delete {{this.name}} ?')">Delete</a>
                         </td>
                     </tr>

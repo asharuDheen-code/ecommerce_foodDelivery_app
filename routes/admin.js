@@ -5,6 +5,8 @@ const adminHelpers = require("../helpers/admin-helpers");
 var router = express.Router();
 var productHelper = require("../helpers/product-helpers");
 var base64ToImage = require("base64-to-image");
+const { categories } = require("../helpers/admin-helpers");
+const { route, render } = require("../app");
 
 const adminUser = "a";
 const adminPassword = "a";
@@ -18,11 +20,13 @@ router.get("/", async function (req, res, next) {
     let allUsers = await adminHelpers.getAllUsers();
     let allOrders = await adminHelpers.getAllOrders();
     let allProducts = await adminHelpers.getAllProducts();
-    res.render("admin/dashboard", {
-      allUsers,
-      allOrders,
-      allProducts,
-    });
+    // adminHelpers.orderData().then((data) => {
+      res.render("admin/dashboard", {
+        allUsers,
+        allOrders,
+        allProducts,
+      });
+    // });
   } else {
     res.render("admin/adminlogin");
   }
@@ -41,7 +45,9 @@ router.get("/view-product", (req, res) => {
 });
 
 router.get("/add-product", function (req, res) {
-  res.render("admin/add-product", { admin: true });
+  adminHelpers.getCategory().then((response) => {
+    res.render("admin/add-product", { admin: true, response });
+  });
 });
 
 router.post("/add-product", (req, res) => {
@@ -78,6 +84,47 @@ router.get("/delete-product/:id", (req, res) => {
     res.redirect("/admin/view-product");
   });
 });
+
+// category Management
+
+router.get("/category", (req, res) => {
+  adminHelpers.getCategory().then((categories) => {
+    res.render("admin/category", { categories });
+  });
+});
+
+router.post("/add", function (req, res) {
+  let add = req.body;
+  adminHelpers.addCategory(add);
+  // res.render("admin/addCategory");
+});
+
+router.get("/addCategory", function (req, res) {
+  res.render("admin/addCategory");
+});
+
+router.get("/editCategory/:id", (req, res) => {
+  let catId = req.params.id;
+  adminHelpers.getEditCategory(catId).then((data) => {
+    res.render("admin/editCategory", { data });
+  });
+});
+
+router.post("/editCategorys/:id", (req, res) => {
+  let id = req.params.id;
+  adminHelpers.editCategory(id, req.body).then((cat) => {
+    res.redirect("/admin/category");
+  });
+});
+
+router.get("/deleteCategory", (req, res) => {
+  let id = req.query.id;
+  console.log("iddddddddddddddddd", id);
+  adminHelpers.deleteCat(id);
+  res.redirect("/admin/category");
+});
+
+// END category Management
 
 router.get("/view-users", (req, res) => {
   adminHelpers.viewUser().then((users) => {
@@ -201,16 +248,31 @@ router.get("/report", (req, res) => {
 });
 
 router.post("/reports", async (req, res) => {
-  let date = req.body.date
+  let date = req.body.date;
   let allDatas = await adminHelpers.getAllDatas(date).then((reports) => {
     console.log("reportssssss", reports);
     // res.render("admin/report", { reports })
-    res.json(reports)
-  })
+    res.json(reports);
+  });
   // res.render("admin/report");
 });
 
-router.get("/test", (req, res) => {
+router.post("/takeReport", (req, res) => {
+  let dates = req.body
+  console.log("daatesss", dates);
+  adminHelpers.orderData(dates).then((dateReports) => {
+    console.log("final daataaaaaaaaas", dateReports);
+    res.json(dateReports)
+  });
+});
+
+router.get("/blockUser/:id", (req, res) => {
+  let id = req.params.id
+  adminHelpers.blockUser(id)
+})
+
+router.get("/testing", (req, res) => {
   res.render("admin/test")
 })
+
 module.exports = router;

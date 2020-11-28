@@ -19,28 +19,134 @@
                 {{!-- <span>or use your email for registration</span> --}}
                 <input id="signUser" type="text" placeholder="Username" name="username" />
                 <input id="signEmail" type="email" placeholder="Email" name="email" />
+                <input id="signEmail" type="mobile" placeholder="Mobile Number" name="mobile" />
                 <input id="signPassword" type="password" placeholder="Password" name="password" />
                 <button id="signUpBtn" type="submit" class="login-button">Sign Up</button>
             </form>
         </div>
 
+        <script>
+            function otpCall() {
+                $("#userName").hide()
+                $("#password").hide()
+                $("#otp").hide()
+                $("#mobile").show()
+                $("#callMobileBtn").show()
+                $("#loginBtn").hide()
+                $("#enterMobile").hide()
+            }
+            function mobileSubmit() {
+                $("#mobile").show()
+                $("#otp").show()
+                $("#callMobileBtn").hide()
+                $("#otpSubmit").show()
+                let mobileNumber = $("#mobile").val()
+                $.ajax({
+                    url: "/checkMobile",
+                    method: "post",
+                    data: {
+                        mobileNumber,
+                    },
+                    success: (response) => {
+                        console.log("ressssssssssssss", response)
+                        if (response.details == null) {
+                            $("#otp").hide()
+                            $("#otpSubmit").hide()
+                            $("#notValid").show()
+                            $("#callMobileBtn").show()
+                        } else {
+                            $("#notValid").hide()
+                            $.ajax({
+                                url: "/callOtp",
+                                method: "post",
+                                data: {
+                                    mobileNumber,
+                                },
+                                success: (response) => {
+                                    localStorage.setItem("id", response)
+
+                                    $("#lastValue").val(response)
+
+                                    let latestId = response
+                                    console.log("lllllllllllllllllllllllll", response)
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+
+            function applyOtp() {
+                let otpId = $("#lastValue").val()
+                let otpNum = $("#otp").val()
+                let mobileNumber = $("#mobile").val()
+                let number = parseInt(otpNum)
+                if (otpNum.length < 6 || otpNum.length > 6) {
+                    $("#otpTotalNum").show()
+                    $("#otpError").hide()
+                } else {
+                    $.ajax({
+                        url: "/otpVerify",
+                        method: "post",
+                        data: {
+                            otpId,
+                            otpNum,
+                            mobileNumber,
+                        },
+                        success: (response) => {
+                            if (response.status) {
+                                window.location = "/";
+                            } else {
+                                $("#otpTotalNum").hide()
+                                $("#otpError").show()
+                                $("#otpError").html(response.errMsg)
+                            }
+                        }
+                    })
+                }
+            }
+        </script>
+
         <div class="form-container sign-in-container">
             <form action="/login" method="POST">
                 <h1>Sign in</h1>
-                <input id="userName" type="email" placeholder="username" name="email" />
-                <input id="password" type="password" placeholder="Password" name="password" />
-                <button id="loginBtn" type="submit" class="login-button">Log In</button>
+                <input id="userName" type="email" placeholder="username" name="email" style="display: block;" />
+                <input id="password" type="password" placeholder="Password" name="password" style="display: block;" />
+
+                <input id="mobile" type="callMobile" placeholder="Enter Mobile Number" name="otp"
+                    style="display: none;" />
+                <input id="otp" type="number" placeholder="Enter Otp" name="otp" style="display: none;" />
+                <input id="lastValue" type="text" value="" name="" hidden>
+
+                <a type="" id="enterMobile" onclick="otpCall()">Login with mobile</a>
+
+                <button id="otpSubmit" type="button" class="login-button" onclick="applyOtp()"
+                    style="display: none;">Otp Sumbit</button>
+                <button id="callMobileBtn" type="button" class="login-button" onclick="mobileSubmit()"
+                    style="display: none;">Submit</button>
+                <button id="loginBtn" type="submit" class="login-button" onclick="logFucnction()">Log In</button>
+                <div>
+                    <h4 id="notValid" style="display: none;">Not valid Number</h4>
+                    <h4 id="otpTotalNum" style="display: none;">Keep Six Digits</h4>
+                    <h4 id="otpError" style="display: none;"></h4>
+                </div>
                 {{#if loginErr}}
                 <div>
                     <h3>{{this.loginErr}}</h3>
                 </div>
                 {{/if}}
-                
+
                 {{#if signupsuc}}
                 <div>
                     <h3>{{this.signupsuc}}</h3>
                 </div>
                 {{/if}}
+                {{#if status}}
+                <div>
+                    <h3>{{this.status}}</h3>
+                </div>
+                {{/if}}
+                <h2 id="status" style="display: none;">accout blocked</h2>
             </form>
         </div>
 
@@ -60,16 +166,33 @@
         </div>
     </div>
 
-    {{!-- <footer>
-        <p>
-            Created with <i class="fa fa-heart"></i> by
-            <a target="_blank" href="https://florin-pop.com">Florin Pop</a>
-            - Read how I created this and how you can join the challenge
-            <a target="_blank" href="https://www.florin-pop.com/blog/2019/03/double-slider-sign-in-up-form/">here</a>.
-        </p>
-    </footer> --}}
     <script src="javascripts/validate.js"></script>
     <script src="javascripts/userlogin.js"></script>
+
+    <script>
+        function logFucnction(event) {
+
+            let email = $("#userName").val()
+            let password = $("#password").val()
+            $.ajax({
+                url: "/checkUser",
+                method: "post",
+                data: {
+                    email,
+                    password
+                },
+                success: (response) => {
+                    console.log("respppppppppp", response)
+                    if (response.userBlock == true) {
+                        document.getElementById("status").style.display = "block"
+                    } else {
+                        document.location.href = "/"
+                    }
+
+                }
+            })
+        }
+    </script>
 </body>
 
 </html>

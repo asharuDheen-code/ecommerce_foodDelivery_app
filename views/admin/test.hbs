@@ -56,33 +56,3 @@
         }
     ])
 </script>
-
-<script>
-        // First total per day. Rounding dates with math here
-    db.order.aggregate([
-        {
-            "$group": {
-                "_id": {
-                    "$add": [
-                        {
-                            "$subtract": [
-                                { "$subtract": ["$createdAt", new Date(0)] },
-                                {
-                                    "$mod": [
-                                        { "$subtract": ["$createdAt", new Date(0)] },
-                                        1000 * 60 * 60 * 24
-                                    ]
-                                }
-                            ]
-                        },
-                        new Date(0)
-                    ]
-                },
-                "week": { "$first": { "$week": "$createdAt" } },
-                "month": { "$first": { "$month": "$createdAt" } },
-                "total": { "$sum": "$num" }
-            }
-        },
-    ])
-
-</script>
