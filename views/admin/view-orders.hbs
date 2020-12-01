@@ -1,110 +1,72 @@
-{{!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css"> --}}
-
-<link rel="stylesheet" href="/stylesheets/sidebar.css">
 <style>
-    #dashboard {
-        color: red;
-        font-size: 22px;
-        font-weight: 600;
-        letter-spacing: 1px;
+    #order {
+        width: 70%;
+        margin-left: 357px;
+        margin-bottom: 100px;
+        margin-top: 90px;
+        height: auto;
+    }
+
+    #orderDetails {
     }
 </style>
 
-<header>
-    <div class="">
-        <div style="display: flex;"> 
+<section id="order">
 
-            <div id="wrapper">
-                <div class="overlay"></div>
-
-                <!-- Sidebar -->
-                <div>
-                    <nav class="navbar navbar-inverse fixed-top" id="sidebar-wrapper" role="navigation">
-                        <ul class="nav sidebar-nav">
-                            <div class="sidebar-header">
-                                <div class="sidebar-brand">
-                                    <a href="#">Swiss Knife</a>
-                                </div>
+    <body id="orderDetails">
+        <h2>Order Details</h2>
+        <table id="example" class="table table-striped table-bordered" style=" ">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Mobile</th>
+                    <th>Order Id</th>
+                    <th>Date</th>
+                    <th>Order Status</th>
+                    <th>Total Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders}}
+                <tr>
+                    <td>{{deliveryDetails.firstName}}</td>
+                    <td>{{deliveryDetails.mobile}}</td>
+                    <td>{{this._id}}</td>
+                    <td>{{date}}</td>
+                    <td>{{status}}</td>
+                    <td>₹{{total}}</td>
+                    <td>
+                        <div style="display: flex;">
+                            <div style="margin-right: 5px;">
+                                <a href="/admin/verify-sucessoOrder/{{this._id}}" class="btn btn-success">Accept</a>
                             </div>
-                            <li><a href="/admin"><span id="dashboard">Dashboared</span></a></li>
-                            <li><a href="/admin/report">Dily Report</a></li>
-                            <li><a href="/admin/view-users">User Details</a></li>
-                            <li><a href="/admin/view-product">Product Details</a></li>
-                            <li><a href="/admin/order-details">Order Details</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <!-- /#sidebar-wrapper -->
+                            <div>
+                                <a href="/admin/verify-cancelOrder/{{this._id}}" class="btn btn-danger">Reject</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>User Name</th>
+                    <th>Mobile</th>
+                    <th>Order Id</th>
+                    <th>Date</th>
+                    <th>Order Status</th>
+                    <th>Total Price</th>
+                    <th>Action</th>
+                </tr>
+            </tfoot>
+        </table>
+    </body>
+</section>
+<!-- /#wrapper -->
 
-                <!-- Page Content -->
-                <div id="page-content-wrapper">
-                    <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
-                        <span class="hamb-top"></span>
-                        <span class="hamb-middle"></span>
-                        <span class="hamb-bottom"></span>
-                    </button>
-                </div>
-                <!-- /#page-content-wrapper -->
-            </div>
-            <section style="width: 97%; margin-left: 95px; margin-bottom: 100px; margin-top: 90px;height: auto;">
-                <table id="example" class="table table-striped table-bordered" style="">
-                    <thead>
-                        <tr>
-                            <th>User Name</th>
-                            <th>Mobile</th>
-                            <th>Order Id</th>
-                            <th>Date</th>
-                            <th>Order Status</th>
-                            <th>Total Price</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each orders}}
-                        <tr>
-                            <td>{{deliveryDetails.name}}</td>
-                            <td>{{deliveryDetails.mobile}}</td>
-                            <td>{{this._id}}</td>
-                            <td>{{date}}</td>
-                            <td>{{status}}</td>
-                            <td>₹{{total}}</td>
-                            <td>
-                                <div style="display: flex;">
-                                    <div style="margin-right: 5px;">
-                                        <a href="/admin/verify-sucessoOrder/{{this._id}}"
-                                            class="btn btn-success">Accept</a>
-                                    </div>
-                                    <div>
-                                        <a href="/admin/verify-cancelOrder/{{this._id}}"
-                                            class="btn btn-danger">Cancel</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>User Name</th>
-                            <th>Mobile</th>
-                            <th>Order Id</th>
-                            <th>Date</th>
-                            <th>Order Status</th>
-                            <th>Total Price</th>
-                            <th>Action</th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </section>
-            <!-- /#wrapper -->
-            <div class="logOutBtn">
-                <a href="/admin/adminlogout" class="btn btn-danger">Log Out</a>
-            </div>
-        </div>
-    </div>
 
-</header>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 

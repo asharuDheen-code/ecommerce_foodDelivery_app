@@ -1,48 +1,70 @@
-<link rel="stylesheet" href="/stylesheets/sidebar.css">
+<link rel="stylesheet" href="/stylesheets/dashboard.css">
+<link rel="stylesheet" href="/stylesheets/test.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<header>
-    <div class="">
-        <div style="display: flex;">
 
-            <div id="wrapper">
-                <div class="overlay"></div>
+<style>
+    .dashboard {
+        width: 100%;
+        margin-top: 17px;
+        letter-spacing: 2px;
+        color: #ccc;
+    }
+</style>
 
-                <!-- Sidebar -->
-                <div>
-                    <nav class="navbar navbar-inverse fixed-top" id="sidebar-wrapper" role="navigation">
-                        <ul class="nav sidebar-nav">
-                            <div class="sidebar-header">
-                                <div class="sidebar-brand">
-                                    <a href="#">Swiss Knife</a></div>
-                            </div>
-                            <li><a href="/admin"><span id="dashboard">Dashboared</span></a></li>
-                            <li><a href="/admin/report">Dily Report</a></li>
-                            <li><a href="/admin/view-users">User Details</a></li>
-                            <li><a href="/admin/view-product">Product Details</a></li>
-                            <li><a href="/admin/order-details">Order Details</a></li>
-                            {{!-- <li><a href="#team">Team</a></li> --}}
-
-                        </ul>
-                    </nav>
-                </div>
-                <!-- /#sidebar-wrapper -->
-
-                <!-- Page Content -->
-                <div id="page-content-wrapper">
-                    <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
-                        <span class="hamb-top"></span>
-                        <span class="hamb-middle"></span>
-                        <span class="hamb-bottom"></span>
-                    </button>
-                </div>
-                <!-- /#page-content-wrapper -->
-            </div>
-            <!-- /#wrapper -->
-            <div class="logOutBtn">
-                <a href="/admin/adminlogout" class="btn btn-danger">Log Out</a>
-            </div>
+<aside class="side-nav" id="show-side-navigation1">
+    <i class="fa fa-bars close-aside hidden-sm hidden-md hidden-lg" data-close="show-side-navigation1"></i>
+    <div class="heading">
+        <img src="https://uniim1.shutterfly.com/ng/services/mediarender/THISLIFE/021036514417/media/23148907008/medium/1501685726/enhance"
+            alt="">
+        <div class="info">
+            <h3><a href="#">Asharudheen</a></h3>
+            <p>Admin</p>
         </div>
     </div>
+    <div>
+        <a type="button" href="/admin" class="dashboard btn btn-outline-primary waves-effect">DashBoard</a>
+    </div>
+    <ul class="categories">
+        <li><i class="fa fa-home fa-fw" aria-hidden="true"></i><a href="#"> User Managment</a>
+            <ul class="side-nav-dropdown">
+                <li><a href="/admin/view-users">View Users</a></li>
+                <li><a href="/admin/add-users">Add User</a></li>
+            </ul>
+        </li>
+        <li><i class="fa fa-home fa-fw" aria-hidden="true"></i><a href="#">Product Managment</a>
+            <ul class="side-nav-dropdown">
+                <li><a href="/admin/view-product">View Products</a></li>
+                <li><a href="/admin/add-product">Add New Products</a></li>
+            </ul>
+        </li>
+        <li><i class="fa fa-home fa-fw" aria-hidden="true"></i><a href="#">Order Managment</a>
+            <ul class="side-nav-dropdown">
+                <li><a href="/admin/order-details">View Orders</a></li>
+                <li><a href="/admin/pendingorder">Pending Orders</a></li>
+                <li><a href="/admin/successorder">Success Orders</a></li>
+                <li><a href="/admin/rejectorder">Canceled Orders</a></li>
+            </ul>
+        </li>
+        <li><i class="fa fa-home fa-fw" aria-hidden="true"></i><a href="#">Category Managment</a>
+            <ul class="side-nav-dropdown">
+                <li><a href="/admin/category">Categories</a></li>
+                <li><a href="/admin/addCategory">Add Category</a></li>
+            </ul>
+        </li>
+        <li><i class="fa fa-home fa-fw" aria-hidden="true"></i><a href="#">Report</a>
+            <ul class="side-nav-dropdown">
+                <li><a href="/admin/salesreport">Sales Report</a></li>
+            </ul>
+        </li>
+    </ul>
+    <div style="text-align: right;">
+        <a type="button" href="/admin/adminlogout" class="btn btn-danger">LogOut</a>
+    </div>
+</aside>
 
-</header>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/javascripts/admin/dashboard.js"></script>
+<script src="/javascripts/admin/report.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>

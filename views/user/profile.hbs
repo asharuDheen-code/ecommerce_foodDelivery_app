@@ -1,9 +1,4 @@
-{{!-- <style>
-    .modal-backdrop.show{
-        opacity: 0;
-    }
-</style> --}}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 <link rel="stylesheet" href="/stylesheets/profile.css" />
 <!-- <meta name="viewport" content="width=device-width, initial-scale=1" /> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css">
@@ -22,13 +17,15 @@
                                 <div class="preview"><img id="profile-pic" src="/user-images/{{profile._id}}.jpg"
                                         alt="user" class="rounded-circle" width="150" height="150"></div>
                                 <div class="mt-3">
-                                    <h4>{{profile.fname}}</h4>
+                                    <h4>{{profile.username}}</h4>
                                     <form action="" id="profile-form" method="POST" enctype="multipart/form-data">
                                     </form>
                                     <input id="file-input" class="d-none" type="file" name="file" placeholder="Photo"
                                         required="" capture>
                                     <button class="btn btn-outline-primary" id="profileImage">Add profile pic</button>
-                                    <button class="btn btn-outline-primary" id="editAddress">Edit profile</button>
+                                    {{!-- <button class="btn btn-outline-primary" id="editAddress">Edit profile</button> --}}
+                                    <button href="" class="btn btn-outline-primary" data-toggle="modal"
+                                        data-target="#modalContactForm">Add addresses</button>
                                     </form>
                                 </div>
                             </div>
@@ -64,7 +61,21 @@
                                     {{profile.email}}
                                 </div>
                             </div>
+                            <div id="app">
+                                <p>
+                                    <strong style="font-size: 20px;">Referral Key: </strong>
+                                    <span style="font-size: 20px;" class="key">{{profile.referral}}</span>
+                                    <i class="copy hide far fa-copy" style="margin-left: -230; margin-top: 15px;"></i>
+                                    <span class="copied hide" style="margin-left: -230px; margin-top: 10px;">
+                                        <i class="fas fa-check"></i> <small>Copied!</small>
+                                    </span>
+                                </p>
+                            </div>
                         </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="" class="btn btn-outline-primary" data-toggle="modal" data-target="#yourAddresses">Your
+                            Addresses</a>
                     </div>
                 </div>
 
@@ -84,36 +95,40 @@
                                     <div class="modal-body mx-3">
                                         <div class="md-form mb-5" style="margin-bottom: 1px !important;">
                                             {{!-- <i class="fas fa-user prefix grey-text"></i> --}}
-                                            <input value="" name="fname" type="text" id="name" class="form-control validate">
+                                            <input value="" name="fname" type="text" id="name"
+                                                class="form-control validate">
                                             <label data-error="wrong" data-success="right" for="form34">First
                                                 Name</label>
                                         </div>
 
                                         <div class="md-form mb-5" style="margin-bottom: 1px !important;">
                                             {{!-- <i class="fas fa-envelope prefix grey-text"></i> --}}
-                                            <input name="lname" value="" type="text" id="lname" class="form-control validate">
+                                            <input name="lname" value="" type="text" id="lname"
+                                                class="form-control validate">
                                             <label data-error="wrong" data-success="right" for="form29">Last
                                                 Name</label>
                                         </div>
 
                                         <div class="md-form mb-5" style="margin-bottom: 1px !important;">
                                             {{!-- <i class="fas fa-tag prefix grey-text"></i> --}}
-                                            <input name="mobile" value="" type="text" id="mobile" class="form-control validate">
+                                            <input name="mobile" value="" type="text" id="mobile"
+                                                class="form-control validate">
                                             <label data-error="wrong" data-success="right" for="form32">Mobile</label>
                                         </div>
 
                                         <div class="md-form mb-5" style="margin-bottom: 1px !important;">
                                             {{!-- <i class="fas fa-tag prefix grey-text"></i> --}}
-                                            <input name="email" value="" type="text" id="newemail" class="form-control validate">
+                                            <input name="email" value="" type="text" id="newemail"
+                                                class="form-control validate">
                                             <label data-error="wrong" data-success="right" for="form32">Email</label>
                                         </div>
 
                                         <div class="md-form" style="margin-bottom: 1px !important;">
                                             {{!-- <i class="fas fa-pencil prefix grey-text"></i> --}}
-                                            <textarea name="address" type="text" id="address" class="md-textarea form-control"
-                                                rows="4"></textarea>
+                                            <textarea name="address" type="text" id="address"
+                                                class="md-textarea form-control" rows="4"></textarea>
                                             <label data-error="wrong" data-success="right" for="form8">Address</label>
-                                            <input name="userId" value="{{profile._id}}" type="text" hidden >
+                                            <input name="userId" value="{{profile._id}}" type="text" hidden>
                                         </div>
 
                                     </div>
@@ -127,14 +142,12 @@
                 </div>
 
                 <div class="text-center">
-                    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal"
-                        data-target="#modalContactForm">Add new address</a>
+
                 </div>
                 {{!-- END Popup Add new address --}}
                 {{!-- Popup Edit profile --}}
-                <div id="onnpoovo">
-                    <div class="modal fade" id="editProfile" tabindex="-1" role="dialog"
-                        aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="editProfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                        aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header text-center">
@@ -147,20 +160,23 @@
                                     <div class="modal-body mx-3">
                                         <div class="md-form mb-5" style="margin-bottom: 1px !important;">
                                             {{!-- <i class="fas fa-user prefix grey-text"></i> --}}
-                                            <input value="{{profile.username}}" type="text" id="editname" class="form-control validate">
+                                            <input value="{{profile.username}}" type="text" id="editname"
+                                                class="form-control validate">
                                             <label data-error="wrong" data-success="right" for="form34">Uers
                                                 Name</label>
                                         </div>
 
                                         <div class="md-form mb-5" style="margin-bottom: 1px !important;">
                                             {{!-- <i class="fas fa-tag prefix grey-text"></i> --}}
-                                            <input value="{{profile.mobile}}" type="text" id="editmobile" class="form-control validate">
+                                            <input value="{{profile.mobile}}" type="text" id="editmobile"
+                                                class="form-control validate">
                                             <label data-error="wrong" data-success="right" for="form32">Mobile</label>
                                         </div>
 
                                         <div class="md-form mb-5" style="margin-bottom: 1px !important;">
                                             {{!-- <i class="fas fa-tag prefix grey-text"></i> --}}
-                                            <input value="{{profile.email}}" type="text" id="editemail" class="form-control validate">
+                                            <input value="{{profile.email}}" type="text" id="editemail"
+                                                class="form-control validate">
                                             <label data-error="wrong" data-success="right" for="form32">Email</label>
                                         </div>
 
@@ -172,11 +188,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="text-center">
-                    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" id="editProfile"
-                        type="button" data-target="#editProfile">Update profile</a>
+                <div class="text-center" style="margin-left: 10px;">
+                    <a href="" class="btn btn-outline-success" data-toggle="modal" id="editProfile" type="button"
+                        data-target="#editProfile">Update profile</a>
                 </div>
 
                 {{!-- END Popup Edit profile --}}
@@ -215,10 +230,7 @@
                     </div>
                 </div>
 
-                <div class="text-center">
-                    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal"
-                        data-target="#yourAddresses">Your Addresses</a>
-                </div>
+
                 {{!-- END Popup Edit Form --}}
 
             </div>
@@ -249,6 +261,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="/javascripts/user/editAddress.js"></script>
+<script src="/javascripts/user/profile.js"></script>
 
 <!-- <script
 
@@ -271,7 +284,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js"></script>
 
 <script>
-    $("#updatAddress").click(function (e) { 
+    $("#updatAddress").click(function (e) {
         var name = $("#editname").val();
         var mobile = $("#editmobile").val();
         var email = $("#editemail").val();

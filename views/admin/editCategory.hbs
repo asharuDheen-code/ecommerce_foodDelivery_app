@@ -1,14 +1,23 @@
+<style>
+    #editCategory {
+        background-color: #2a2b3d;
+
+    }
+</style>
+
 <section>
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-6">
-                <h2 class="text-center">Edit Product</h2>
-                <form action="/admin/editCategorys/{{data._id}}" method="POST" enctype="multipart/form-data">
-                    <label for="">Category</label>
-                    <input type="text" name="category" class="form-control" value="{{data.category}}">
-                    <button type="submit" class="btn btn-success mt-4">submitt</button>
-                </form>
+    <body id="editCategory">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-6" style="margin-left: 420px; margin-top: 35px;">
+                    <h2 class="text-center" style="color: #ccc;">Edit Product</h2>
+                    <form action="/admin/editCategorys/{{data._id}}" method="POST" enctype="multipart/form-data">
+                        <label for="" style="color: #ccc;">Category</label>
+                        <input type="text" name="category" class="form-control" value="{{data.category}}">
+                        <button type="submit" class="btn btn-success mt-4">submitt</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    </body>
 </section>

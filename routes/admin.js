@@ -20,17 +20,25 @@ router.get("/", async function (req, res, next) {
     let allUsers = await adminHelpers.getAllUsers();
     let allOrders = await adminHelpers.getAllOrders();
     let allProducts = await adminHelpers.getAllProducts();
-    // adminHelpers.orderData().then((data) => {
+    adminHelpers.getSuccess().then((response) => {
+      console.log("hhhhhhhhhhhhhhhhhhhhh", response);
       res.render("admin/dashboard", {
         allUsers,
         allOrders,
         allProducts,
+        response,
       });
-    // });
+    });
   } else {
     res.render("admin/adminlogin");
   }
 });
+
+router.post("/dashboardData", (req, res) => {
+  adminHelpers.getSuccess().then((response) => {
+    res.json(response)
+  })
+})
 
 router.get("/view-users", (req, res) => {
   adminHelpers.viewUser().then((users) => {
@@ -89,7 +97,14 @@ router.get("/delete-product/:id", (req, res) => {
 
 router.get("/category", (req, res) => {
   adminHelpers.getCategory().then((categories) => {
-    res.render("admin/category", { categories });
+    res.render("admin/category", { categories, admin: true });
+  });
+});
+
+router.post("/addNewCategory", (req, res) => {
+  let category = req.body;
+  adminHelpers.addNewCategory(category).then((response) => {
+    res.json(response);
   });
 });
 
@@ -97,16 +112,20 @@ router.post("/add", function (req, res) {
   let add = req.body;
   adminHelpers.addCategory(add);
   // res.render("admin/addCategory");
+  res.redirect("/admin/category");
 });
 
 router.get("/addCategory", function (req, res) {
-  res.render("admin/addCategory");
+  adminHelpers.getCategory().then((categories) => {
+    console.log("sfdddddddddddddddddddddddsfs", categories);
+    res.render("admin/addCategory", { admin: true, categories });
+  });
 });
 
 router.get("/editCategory/:id", (req, res) => {
   let catId = req.params.id;
   adminHelpers.getEditCategory(catId).then((data) => {
-    res.render("admin/editCategory", { data });
+    res.render("admin/editCategory", { data, admin: true });
   });
 });
 
@@ -124,7 +143,27 @@ router.get("/deleteCategory", (req, res) => {
   res.redirect("/admin/category");
 });
 
-// END category Management
+//****************Order Managment****************\\
+
+router.get("/successorder", (req, res) => {
+  adminHelpers.getSuccessOrder().then((successOrder) => {
+    res.render("admin/successOrders", { admin: true, successOrder });
+  });
+});
+
+router.get("/rejectorder", (req, res) => {
+  adminHelpers.getRejectOrder().then((successOrder) => {
+    res.render("admin/successOrders", { admin: true, successOrder });
+  });
+});
+
+router.get("/pendingorder", (req, res) => {
+  adminHelpers.getPendingOrder().then((pendingOrder) => {
+    res.render("admin/pendingorders", { admin: true, pendingOrder });
+  });
+});
+
+//****************END Order Managment****************\\
 
 router.get("/view-users", (req, res) => {
   adminHelpers.viewUser().then((users) => {
@@ -187,7 +226,8 @@ router.post("/edit-users/:id", (req, res) => {
 
 router.get("/order-details", async (req, res) => {
   let orders = await adminHelpers.getUserOrder();
-  res.render("admin/view-orders", { orders });
+  console.log("orrrrrrrrrrrrderes", orders);
+  res.render("admin/view-orders", { orders, admin: true });
 });
 
 router.get("/adminlogout", (req, res) => {
@@ -258,21 +298,44 @@ router.post("/reports", async (req, res) => {
 });
 
 router.post("/takeReport", (req, res) => {
-  let dates = req.body
+  let dates = req.body;
   console.log("daatesss", dates);
   adminHelpers.orderData(dates).then((dateReports) => {
     console.log("final daataaaaaaaaas", dateReports);
-    res.json(dateReports)
+    res.json(dateReports);
   });
 });
 
 router.get("/blockUser/:id", (req, res) => {
-  let id = req.params.id
-  adminHelpers.blockUser(id)
-})
+  let id = req.params.id;
+  adminHelpers.blockUser(id);
+});
 
-router.get("/testing", (req, res) => {
-  res.render("admin/test")
-})
+router.post("/date", (req, res) => {
+  if (req.body.date == "weekly") {
+    adminHelpers.getWeekly(req.body.date).then((weeklyData) => {
+      res.json(weeklyData);
+    });
+  } else if (req.body.date == "monthly") {
+    adminHelpers.getWeekly(req.body.date).then((monthlyData) => {
+      res.json(monthlyData);
+    });
+  } else if (req.body.date == "yearly") {
+    adminHelpers.getWeekly(req.body.date).then((yearlyData) => {
+      res.json(yearlyData);
+    });
+  }
+});
+
+router.get("/salesreport", (req, res) => {
+  res.render("admin/salesReport", { admin: true });
+});
+
+router.get("/test", (req, res) => {
+  adminHelpers.getSuccess().then((response) => {
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhh", response);
+    res.render("admin/voucherManagement");
+  });
+});
 
 module.exports = router;

@@ -1,39 +1,53 @@
-<section>
-    <div class="container" style="display: flex; justify-content: center; max-width: 100%;">
-        <div class="col-lg-8 col-lg-offset-2">
-            <h1>User Section</h1>
-            <div class="row mt-4">
-                <a href="/admin/addCategory" class="btn btn-success ml-auto">Add Category</a>
-            </div>
-            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."
-                title="Type in a name">
+<style>
+    #category {
+        margin-left: 294px;
+        margin-top: 35px;
+    }
 
-            <table class="table table-dark mt-3" id="myTable">
-                <thead>
-                    <tr>
-                        <th scope="col">No</th>
-                        <th scope="col">Category</th>
-                        {{!-- <th scope="col">Email</th> --}}
-                        {{!-- <th scope="col">password</th> --}}
-                        {{!-- <th scope="col">Image</th> --}}
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each categories}}
-                    <tr>
-                        <th scope="row"> {{@index}} </th>
-                        <td>{{this.category}}</td>
-                        <td>
-                            <a href="/admin/editCategory/{{this._id}}" class="btn btn-primary">Edit</a>
-                            <a href="/admin/deleteCategory?id={{this._id}}" class="btn btn-danger"
-                                onclick="return confirm('are you sure want delete {{this.name}} ?')">Delete</a>
-                        </td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+    #viewCategory {
+        background-color: #2a2b3d;
+    }
+</style>
+
+<section>
+
+    <body id="viewCategory">
+        <div class="container" style="display: flex; justify-content: center; max-width: 100%;">
+            <div id="category" class="col-lg-8 col-lg-offset-2">
+                <h1 style="color: #ccc;">User Section</h1>
+                <div class="row mt-4" style="margin: 0;">
+                    <a href="/admin/addCategory" class="btn btn-success ml-auto">Add Category</a>
+                </div>
+                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."
+                    title="Type in a name">
+
+                <table class="table table-dark mt-3" id="myTable" style="background-color: #313348; border-radius: 3px;">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Category</th>
+                            {{!-- <th scope="col">Email</th> --}}
+                            {{!-- <th scope="col">password</th> --}}
+                            {{!-- <th scope="col">Image</th> --}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each categories}}
+                        <tr>
+                            <th scope="row"> {{@index}} </th>
+                            <td>{{this.category}}</td>
+                            <td style="text-align: right; padding-right: 50px;">
+                                <a href="/admin/editCategory/{{this._id}}" class="btn btn-primary">Edit</a>
+                                <a href="/admin/deleteCategory?id={{this._id}}" class="btn btn-danger"
+                                    onclick="return confirm('are you sure want delete {{this.name}} ?')">Delete</a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    </body>
 </section>
 
 

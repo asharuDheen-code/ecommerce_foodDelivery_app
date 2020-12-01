@@ -1,58 +1,37 @@
-<script>
-    db.collection.aggregate([
-        // First total per day. Rounding dates with math here
-        {
-            "$group": {
-                "_id": {
-                    "$add": [
-                        {
-                            "$subtract": [
-                                { "$subtract": ["$createdAt", new Date(0)] },
-                                {
-                                    "$mod": [
-                                        { "$subtract": ["$createdAt", new Date(0)] },
-                                        1000 * 60 * 60 * 24
-                                    ]
-                                }
-                            ]
-                        },
-                        new Date(0)
-                    ]
-                },
-                "week": { "$first": { "$week": "$createdAt" } },
-                "month": { "$first": { "$month": "$createdAt" } },
-                "total": { "$sum": "$num" }
-            }
-        },
 
-        // Then group by week
-        {
-            "$group": {
-                "_id": "$week",
-                "month": { "$first": "$month" },
-                "days": {
-                    "$push": {
-                        "day": "$_id",
-                        "total": "$total"
-                    }
-                },
-                "total": { "$sum": "$total" }
-            }
-        },
+    <script>
+      var weekly = document.getElementById("weekly");
+      var monthly = document.getElementById("monthly");
+      var yearly = document.getElementById("yearly");
 
-        // Then group by month
-        {
-            "$group": {
-                "_id": "$month",
-                "weeks": {
-                    "$push": {
-                        "week": "$_id",
-                        "total": "$total",
-                        "days": "$days"
-                    }
-                },
-                "total": { "$sum": "$total" }
-            }
-        }
-    ])
-</script>
+      weekly.onclick = function () {
+        alert("weekly")
+        $.ajax({
+          url: "/admin/date",
+          method: "post",
+          data: {
+            date: "weekly"
+          }
+        })
+      }
+      monthly.onclick = function () {
+        alert("monthly")
+        $.ajax({
+          url: "/admin/date",
+          method: "post",
+          data: {
+            date: "monthly"
+          }
+        })
+      }
+      yearly.onclick = function () {
+        alert("yearly")
+        $.ajax({
+          url: "/admin/date",
+          method: "post",
+          data: {
+            date: "yearly"
+          }
+        })
+      }
+    </script>

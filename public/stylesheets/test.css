@@ -120,7 +120,7 @@ h1 {
 
 .container {
   display: block;
-  text-align: center;
+  /* text-align: center; */
 }
 /* 
 h3 {
@@ -185,6 +185,12 @@ h3:after {
 
 .report {
   display: flex;
-  margin-left: 200px;
-  margin-bottom: 10px;
+}
+
+#reports{
+  background-color: #2a2b3d;
+}
+
+.text {
+  color: #ccc;
 }

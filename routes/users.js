@@ -11,9 +11,15 @@ var router = express.Router();
 
 const varifyLogin = (req, res, next) => {
   if (req.session.loggedIn) {
-    next();
-  } else {
-    res.render("user/userlogin");
+    userHelpers.checkUserBlock(req.session.user._id).then((response) => {
+      if (response.userBlock != true) {
+        next();
+      } else {
+        req.session.loggedIn = null;
+        res.redirect("/logout");
+        // res.render("user/userlogin");
+      }
+    });
   }
 };
 
@@ -74,16 +80,25 @@ router.get("/login", (req, res) => {
     });
     req.session.loginErr = false;
     req.session.signupsuc = false;
+    req.session.checkUser = false;
   }
 });
 
 router.post("/login", (req, res) => {
   userHelpers.dologin(req.body).then((response) => {
-    if (response.status) {
+    console.log("sdfsjjjjjjjjjjjj", response);
+    if (response.status && response.user.userBlock != true) {
+      console.log("ffffffffffffffffffffkeri");
       req.session.loggedIn = true;
+      req.session.checkUser = false;
       req.session.user = response.user;
       res.redirect("/");
+    } else if (response.status && response.user.userBlock == true) {
+      console.log("lllllllllllllllllllllllllkeri");
+      req.session.loginErr = "Accound hasbeen blocked !";
+      res.redirect("/login");
     } else {
+      console.log("ithimmmmmmmmmmmmmmmmm");
       req.session.loginErr = "ivalid user or password !";
       res.redirect("/login");
     }
@@ -238,7 +253,7 @@ router.get("/view-order-products/:id", varifyLogin, async (req, res) => {
 });
 
 router.get("/test", (req, res) => {
-  res.render("user/test");
+  res.render("admin/test");
 });
 
 router.post("/addAddress", varifyLogin, (req, res) => {
@@ -369,7 +384,7 @@ router.post("/otpVerify", (req, res) => {
       userHelpers.getOneUser(req.body.mobileNumber).then((userData) => {
         req.session.loggedIn = true;
         req.session.user = userData;
-        res.json({ status: true});
+        res.json({ status: true });
       });
     } else {
       res.json({ status: false, errMsg: result.error });

@@ -1,0 +1,81 @@
+<style>
+    #order {
+        width: 70%;
+        margin-left: 357px;
+        margin-bottom: 100px;
+        margin-top: 90px;
+        height: auto;
+    }
+
+    #orderDetails {
+    }
+</style>
+
+<section id="order">
+
+    <body id="orderDetails">
+        <h2>Pending Orders</h2>
+        <table id="example" class="table table-striped table-bordered" style=" ">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Mobile</th>
+                    <th>Order Id</th>
+                    <th>Date</th>
+                    <th>Order Status</th>
+                    <th>Total Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each pendingOrder}}
+                <tr>
+                    <td>{{deliveryDetails.firstName}}</td>
+                    <td>{{deliveryDetails.mobile}}</td>
+                    <td>{{this._id}}</td>
+                    <td>{{date}}</td>
+                    <td>{{status}}</td>
+                    <td>₹{{total}}</td>
+                    <td>
+                        <div style="display: flex;">
+                            <div style="margin-right: 5px;">
+                                <a href="/admin/verify-sucessoOrder/{{this._id}}" class="btn btn-success">Accept</a>
+                            </div>
+                            <div>
+                                <a href="/admin/verify-cancelOrder/{{this._id}}" class="btn btn-danger">Reject</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>User Name</th>
+                    <th>Mobile</th>
+                    <th>Order Id</th>
+                    <th>Date</th>
+                    <th>Order Status</th>
+                    <th>Total Price</th>
+                    <th>Action</th>
+                </tr>
+            </tfoot>
+        </table>
+    </body>
+</section>
+<!-- /#wrapper -->
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+{{!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script> --}}
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+</script>

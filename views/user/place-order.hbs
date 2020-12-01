@@ -141,10 +141,17 @@
                                     alt="" width="50">
                             </span>
                         </div>
-
+                        <div style="display: flex;">
+                            <div style="padding-top: 20px;">
+                                <input type="text" placeholder="Use Your Voucher" style="font-family: revert; width: 177px; border-radius: 5px;">
+                            </div>
+                            <div style="padding-top: 20px;">
+                                <button class="btn btn-success" style="width: 65px; padding: 0; height: 30px; "><span>Apply</span></button>
+                            </div>
+                        </div>
                         <div id="paypal-button-container" class="" style="display: flex; width: 100%;"></div>
 
-                        <div id="orderBtn" style="width: 100%;">
+                        <div id="orderBtn" style="width: 100%; margin-top: -15px;">
                             <button id="place-order" type="submit" style="font-family: sans-serif;"
                                 onclick="myFunction()">place
                                 order</button>
@@ -204,7 +211,7 @@
 
     $('#checkout-form').submit((e) => {
         e.preventDefault()
-        $.ajax({ 
+        $.ajax({
             url: '/place-order',
             method: 'post',
             data: $('#checkout-form').serialize(), // SERIALIZE Geting all data from a form

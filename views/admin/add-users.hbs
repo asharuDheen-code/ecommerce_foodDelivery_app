@@ -1,57 +1,67 @@
-    <section>
-        <div class="container mt-4" >
+<style>
+    #editUser {
+        background-color: #2a2b3d;
+    }
+</style>
+
+<section>
+
+    <body id="editUser">
+        <div class="container mt-4">
             <div class="row" style="justify-content: center;">
-                <div class="col-md-6">
-                    <h2 class="text-center">Add user</h2>
+                <div class="col-md-6" style="margin-left: 340px;margin-top: 100px;background-color: #313348; height: 310px;">
+                    <h2 class="text-center" style="color: #ccc;">Add user</h2>
                     <form enctype="multipart/form-data">
-                        <label for="">Name</label>
+                        <label for="" style="color: #ccc;">Name</label>
                         <input id="name" type="text" name="username" class="form-control">
-                        <label for="">Email</label>
+                        <label for="" style="color: #ccc;">Email</label>
                         <input id="addemail" type="text" name="email" class="form-control">
-                        <label for="">Password</label>
+                        <label for="" style="color: #ccc;">Password</label>
                         <input id="password" type="text" name="password" class="form-control">
                         <div class="user-exist" style="display: none;">
-                            <p>user already-exist</p>
+                            <p style="color: #ccc;">user already-exist</p>
                         </div>
                         <div class="empty" style="display: none;">
-                            <p>please enter the details</p>
+                            <p style="color: #ccc;">please enter the details</p>
                         </div>
                         <button id="formsubmission" type="button" class="btn btn-success mt-4">submit</button>
                     </form>
                 </div>
             </div>
         </div>
-    </section>
+    </body>
 
-    <script>
-        $("#formsubmission").click(function () {
-            if ($("#name").val() === "") {
-                $(".empty").css("display", "block");
-            }
-            else if ($("#addemail").val() === "") {
-                $(".empty").css("display", "block");
-            }
-            else if ($("#adduser").val() === "") {
-                $(".empty").css("display", "block");
-            } else {
-                $.post("/admin/add-users",
-                    {
-                        username: $('#name').val(),
-                        email: $("#addemail").val(),
-                        password: $('#password').val()
-                    },
-                    function (data, status) {
-                        console.log("Data: " + data + "\nStatus: " + status);
+</section>
 
-                        if (data === 'success') {
-                            document.location.href = "http://localhost:3002/admin/view-users";
-                        } else if (data === 'already-exist') {
-                            $('.empty').css("display", "none");
-                            $('.user-exist').css("display", "block");
+<script>
+    $("#formsubmission").click(function () {
+        if ($("#name").val() === "") {
+            $(".empty").css("display", "block");
+        }
+        else if ($("#addemail").val() === "") {
+            $(".empty").css("display", "block");
+        }
+        else if ($("#adduser").val() === "") {
+            $(".empty").css("display", "block");
+        } else {
+            $.post("/admin/add-users",
+                {
+                    username: $('#name').val(),
+                    email: $("#addemail").val(),
+                    password: $('#password').val()
+                },
+                function (data, status) {
+                    console.log("Data: " + data + "\nStatus: " + status);
 
-                        }
-                    });
-            }
+                    if (data === 'success') {
+                        document.location.href = "http://localhost:3002/admin/view-users";
+                    } else if (data === 'already-exist') {
+                        $('.empty').css("display", "none");
+                        $('.user-exist').css("display", "block");
 
-        });
-    </script>
+                    }
+                });
+        }
+
+    });
+</script>

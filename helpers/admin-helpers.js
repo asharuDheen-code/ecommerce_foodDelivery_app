@@ -165,7 +165,7 @@ module.exports = {
           { _id: objectId(orderId) },
           {
             $set: {
-              status: "Your Order Confirme",
+              status: "Order Confirme",
             },
           }
         )
@@ -183,7 +183,7 @@ module.exports = {
           { _id: objectId(orderId) },
           {
             $set: {
-              status: "Your Order Canceled",
+              status: "Order Canceled",
             },
           }
         )
@@ -316,7 +316,7 @@ module.exports = {
   orderData: (twoDates) => {
     firstDate = twoDates.firstDate;
     secondDate = twoDates.secondDate;
-    let date = "2020-11-21"
+    let date = "2020-11-21";
     return new Promise(async (resolve, reject) => {
       await db
         .get()
@@ -364,11 +364,219 @@ module.exports = {
   },
 
   blockUser: (userId) => {
-    db.get().collection(collection.USER_COLLECTION)
-    .findOneAndUpdate({_id: objectId(userId)}, {
-      $set: {
-        userBlock: true
+    db.get()
+      .collection(collection.USER_COLLECTION)
+      .findOneAndUpdate(
+        { _id: objectId(userId) },
+        {
+          $set: {
+            userBlock: true,
+          },
+        }
+      );
+  },
+
+  getWeekly: (needDate) => {
+    return new Promise((resolve, reject) => {
+      if (needDate == "weekly") {
+        var days = new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
       }
-    })
-  }
+      if (needDate == "monthly") {
+        var days = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000);
+      }
+      if (needDate == "yearly") {
+        var days = new Date(new Date().getTime() - 365 * 24 * 60 * 60 * 1000);
+      }
+      db.get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $match: {
+              fulldate: {
+                $gt: days,
+              },
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              total: { $sum: "$total" },
+              count: { $sum: 1 },
+              datas: {
+                $push: {
+                  orderId: "$_id",
+                  firstName: "$deliveryDetails.firstName",
+                  lastName: "$deliveryDetails.lastName",
+                  mobile: "$deliveryDetails.mobile",
+                  email: "$deliveryDetails.email",
+                  address: "$deliveryDetails.address",
+                  orderTotal: "$total",
+                  status: "$status",
+                  date: "$date",
+                  paymentMethod: "$paymentMethod",
+                },
+              },
+            },
+          },
+          {
+            $unwind: "$datas",
+          },
+          {
+            $project: {
+              datas: 1,
+              count: 1,
+              total: 1,
+            },
+          },
+        ])
+        .toArray()
+        .then((response) => {
+          console.log("weeklyReport", response);
+          resolve(response);
+        });
+    });
+  },
+
+  addNewCategory: (category) => {
+    let categorys = category.category;
+    return new Promise(async (resolve, reject) => {
+      await db
+        .get()
+        .collection(collection.CATEGORY_COLLECTION)
+        .find({ category: categorys })
+        .toArray()
+        .then(async (data) => {
+          if (data.length != 0) {
+            resolve();
+          } else {
+            await db
+              .get()
+              .collection(collection.CATEGORY_COLLECTION)
+              .insertOne(category)
+              .then((value) => {
+                resolve(value);
+              });
+          }
+        });
+    });
+  },
+
+  getSuccessOrder: () => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.ORDER_COLLECTION)
+        .find({ status: "Order Confirme" })
+        .toArray()
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+
+  getRejectOrder: () => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.ORDER_COLLECTION)
+        .find({ status: "Order Canceled" })
+        .toArray()
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+
+  getPendingOrder: () => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.ORDER_COLLECTION)
+        .find({ status: "placed" })
+        .toArray()
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+
+  getSuccess: () => {
+    return new Promise((resolve, reject) => {
+      var days = new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
+      db.get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $match: {
+              fulldate: {
+                $gt: days,
+              },
+              status: "placed",
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              count: { $sum: 1 },
+              total: { $sum: "$total" },
+              data: {
+                $push: {
+                  orderId: "$_id",
+                  firstName: "$deliveryDetails.firstName",
+                  day: "$day",
+                  date: "$ddate",
+                  status: "$status",
+                },
+              },
+            },
+          },
+          {
+            $unwind: "$data",
+          },
+        ])
+        .toArray()
+        .then((data) => {
+          resolve(data);
+        });
+    });
+  },
+
+  getCanceled: () => {
+    return new Promise((resolve, reject) => {
+      var days = new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
+      db.get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $match: {
+              fulldate: {
+                $gt: days,
+              },
+              status: "Order Canceled",
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              count: { $sum: 1 },
+              toatal: { $sum: "$total" },
+              data: {
+                $push: {
+                  orderId: "$_id",
+                  firstName: "$deliveryDetails.firstName",
+                  day: "$day",
+                  date: "$ddate",
+                  status: "$status",
+                },
+              },
+            },
+          },
+          {
+            $unwind: "$data",
+          },
+        ])
+        .toArray()
+        .then((data) => {
+          resolve(data);
+          console.log("qqqqqqqqqqqqqqqqqqqqqqq", data);
+        });
+    });
+  },
 };

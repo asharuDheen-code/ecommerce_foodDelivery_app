@@ -1,25 +1,40 @@
-<section>
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-6">
-                <h2 class="text-center">Edit Product</h2>
-                <form action="/admin/edit-products/{{product._id}}" method="POST" enctype="multipart/form-data">
-                    <label for="">Name</label>
-                    <input type="text" name="name" class="form-control" value="{{product.name}}">
-                    <label for="">Category</label>
-                    <input type="text" name="category" class="form-control" value="{{product.category}}">
-                    <label for="">Description</label>
-                    <input type="text" name="description" class="form-control" value="{{product.description}}">
+<style>
+    #editproduct {
+        margin-left: 425px;
+        margin-top: 100px;
+        background-color: #313348;
+        height: 415px;
+    }
 
-                    <label for="">Image</label>
-                    <img src="/product-image/{{product._id}}.jpg" id="imgView" alt=""
-                        style="width: 100px; height: auto;" class="mt-4">
-                    <input type="file" name="Image" class="form-control mt-2" onchange="viewImage(event)">
-                    <button type="submit" class="btn btn-success mt-4">submitt</button>
-                </form>
+    #product {
+        background-color: #2a2b3d;
+    }
+</style>
+
+<section>
+    <body id="product">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-6" id="editproduct">
+                    <h2 class="text-center" style="color: #ccc;">Edit Product</h2>
+                    <form action="/admin/edit-products/{{product._id}}" method="POST" enctype="multipart/form-data">
+                        <label for="" style="color: #ccc;">Name</label>
+                        <input type="text" name="name" class="form-control" value="{{product.name}}">
+                        <label for="" style="color: #ccc;">Category</label>
+                        <input type="text" name="category" class="form-control" value="{{product.category}}">
+                        <label for="" style="color: #ccc;">Description</label>
+                        <input type="text" name="description" class="form-control" value="{{product.description}}">
+
+                        <label for="" style="color: #ccc;">Image</label>
+                        <img src="/product-image/{{product._id}}.jpg" id="imgView" alt=""
+                            style="width: 100px; height: auto;" class="mt-4">
+                        <input type="file" name="Image" class="form-control mt-2" onchange="viewImage(event)">
+                        <button type="submit" class="btn btn-success mt-4">submitt</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    </body>
 </section>
 
 <script>

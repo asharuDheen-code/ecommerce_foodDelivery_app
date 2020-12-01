@@ -1,0 +1,127 @@
+<style>
+    #sales {
+        background-color: #2a2b3d;
+    }
+</style>
+
+<link rel="stylesheet" href="/stylesheets/test.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<section id="reports" style="height: 100%;">
+    <body id="sales">
+        <section>
+            <div class="container" style="padding-left: 310px;">
+                <h1 class="text">Report</h1>
+
+                <div class="report">
+                    <div>
+                        <input id="firstDate" type="date">
+                    </div>
+                    <span class="text" style="font-weight: bold;">..to..</span>
+                    <div>
+                        <input id="secondDate" type="date">
+                    </div>
+                    <div style="margin-top: -3px; margin-left: 10px;">
+                        <button class="btn btn-success" type="button" onclick="myFunction(value)">submit</button>
+                    </div>
+                </div>
+                <div style="display: block; margin-left: 633px;">
+                    <div>
+                        <span style="color: #ccc;">TotalPurchase</span>
+                    </div>
+                    <div>
+                        <input type="text" id="totalSale" value="Total Sale " style="text-align: center;" name=""
+                            disabled>
+                    </div>
+                </div>
+
+
+                {{!-- report section --}}
+                <div style="height: auto; margin-bottom: 100px;">
+                    <table class="rwd-table" id="reportTable" style="width: -webkit-fill-available;">
+                        <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Order Id</th>
+                                <th>Date</th>
+                                <th>Order Status</th>
+                                <th>Payment Method</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="report">
+
+                        </tbody>
+                    </table>
+
+                </div>
+                {{!--End report section --}}
+
+
+                {{!-- <h3>Resize Me</h3> --}}
+            </div>
+        </section>
+        {{!--End report section --}}
+
+        {{!-- Anual report section --}}
+        <section>
+            <div class="container" style="padding-left: 310px;">
+                <h1 class="text">All Report</h1>
+
+                <div style="display: inline-flex; ">
+                    <div class="dropdown" style="margin-right: 300px;">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Anual Report
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a id="weekly" class="dropdown-item" type="button" onclick="newFun('weekly')">Weekly
+                                Report</a>
+                            <a id="monthly" class="dropdown-item" type="button" onclick="newFun('monthly')">Monthly
+                                Report</a>
+                            <a id="yearly" class="dropdown-item" type="button" onclick="newFun('yearly')">Yearly
+                                Report</a>
+                        </div>
+                    </div>
+                    <div style="margin-left: 203px;">
+                        <div>
+                            <span style="color: #ccc;">TotalPurchase</span>
+                        </div>
+                        <div>
+                            <input type="text" id="totalSales" value="Total Sale " name="" id="" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="height: auto; margin-bottom: 100px;">
+                    <table class="rwd-table" id="reportTable" style="width: -webkit-fill-available;">
+                        <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Order Id</th>
+                                <th>Date</th>
+                                <th>Order Status</th>
+                                <th>Payment Method</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="anualReport">
+
+                        </tbody>
+                    </table>
+
+                </div>
+                {{!--End report section --}}
+
+
+                {{!-- <h3>Resize Me</h3> --}}
+            </div>
+        </section>
+        {{!--END Anual report section --}}
+    </body>
+</section>
+
+<script src="/javascripts/admin/report.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>

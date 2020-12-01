@@ -10,6 +10,7 @@ let moment = require("moment");
 let format2 = "YYYY-MM-DD";
 const cucumber = require("@cucumber/cucumber");
 const { promises } = require("dns");
+const referralCodeGenerator = require("referral-code-generator")
 
 var instance = new Razorpay({
   key_id: "rzp_test_CyyEWbJn9u0YOv",
@@ -31,6 +32,7 @@ module.exports = {
           if (result.length != 0) {
             resolve({ status: null });
           } else {
+            userData.referral = referralCodeGenerator.custom('lowercase', 6, 6, 'temitope');
             userData.password = await bcrypt.hash(userData.password, 10);
             db.get()
               .collection(collection.USER_COLLECTION)
@@ -658,10 +660,8 @@ module.exports = {
         .findOne({ mobile: number })
         .then((details) => {
           if (details != null) {
-            console.log("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnot", details);
             resolve({details: details});
           } else {
-            console.log("detailsssssssssUser", details);
             resolve({details: null});
           }
         });
@@ -672,6 +672,15 @@ module.exports = {
     return new Promise((resolve, reject) => {
       db.get().collection(collection.USER_COLLECTION)
       .findOne({mobile: mobileNum}).then((response) => {
+        resolve(response)
+      })
+    })
+  }, 
+
+  checkUserBlock: (userId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.USER_COLLECTION)
+      .findOne({_id: objectId(userId)}).then((response) => {
         resolve(response)
       })
     })
