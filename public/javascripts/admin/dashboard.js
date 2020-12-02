@@ -1,222 +1,251 @@
+$(function () {
+  "use strict";
 
+  var aside = $(".side-nav"),
+    showAsideBtn = $(".show-side-btn"),
+    contents = $("#contents"),
+    _window = $(window);
 
-// $(function () {
-//   "use strict";
+  showAsideBtn.on("click", function () {
+    $("#" + $(this).data("show")).toggleClass("show-side-nav");
+    contents.toggleClass("margin");
+  });
 
-//   var aside = $(".side-nav"),
-//     showAsideBtn = $(".show-side-btn"),
-//     contents = $("#contents"),
-//     _window = $(window);
+  if (_window.width() <= 767) {
+    aside.addClass("show-side-nav");
+  }
 
-//   showAsideBtn.on("click", function () {
-//     $("#" + $(this).data("show")).toggleClass("show-side-nav");
-//     contents.toggleClass("margin");
-//   });
+  _window.on("resize", function () {
+    if ($(window).width() > 767) {
+      aside.removeClass("show-side-nav");
+    }
+  });
 
-//   if (_window.width() <= 767) {
-//     aside.addClass("show-side-nav");
-//   }
+  // dropdown menu in the side nav
+  var slideNavDropdown = $(".side-nav-dropdown");
 
-//   _window.on("resize", function () {
-//     if ($(window).width() > 767) {
-//       aside.removeClass("show-side-nav");
-//     }
-//   });
+  $(".side-nav .categories li").on("click", function () {
+    var $this = $(this);
 
-//   // dropdown menu in the side nav
-//   var slideNavDropdown = $(".side-nav-dropdown");
+    $this.toggleClass("opend").siblings().removeClass("opend");
 
-//   $(".side-nav .categories li").on("click", function () {
-//     var $this = $(this);
+    if ($this.hasClass("opend")) {
+      $this.find(".side-nav-dropdown").slideToggle("fast");
+      $this.siblings().find(".side-nav-dropdown").slideUp("fast");
+    } else {
+      $this.find(".side-nav-dropdown").slideUp("fast");
+    }
+  });
 
-//     $this.toggleClass("opend").siblings().removeClass("opend");
+  $(".side-nav .close-aside").on("click", function () {
+    $("#" + $(this).data("close")).addClass("show-side-nav");
+    contents.removeClass("margin");
+  });
 
-//     if ($this.hasClass("opend")) {
-//       $this.find(".side-nav-dropdown").slideToggle("fast");
-//       $this.siblings().find(".side-nav-dropdown").slideUp("fast");
-//     } else {
-//       $this.find(".side-nav-dropdown").slideUp("fast");
-//     }
-//   });
+  // Start chart
+  var chart = document.getElementById("myChart");
+  Chart.defaults.global.animation.duration = 2000; // Animation duration
+  Chart.defaults.global.title.display = false; // Remove title
+  Chart.defaults.global.title.text = "Chart"; // Title
+  Chart.defaults.global.title.position = "bottom"; // Title position
+  Chart.defaults.global.defaultFontColor = "#999"; // Font color
+  Chart.defaults.global.defaultFontSize = 10; // Font size for every label
 
-//   $(".side-nav .close-aside").on("click", function () {
-//     $("#" + $(this).data("close")).addClass("show-side-nav");
-//     contents.removeClass("margin");
-//   });
+  // Chart.defaults.global.tooltips.backgroundColor = '#FFF'; // Tooltips background color
+  Chart.defaults.global.tooltips.borderColor = "white"; // Tooltips border color
+  Chart.defaults.global.legend.labels.padding = 0;
+  Chart.defaults.scale.ticks.beginAtZero = true;
+  Chart.defaults.scale.gridLines.zeroLineColor = "rgba(255, 255, 255, 0.1)";
+  Chart.defaults.scale.gridLines.color = "rgba(255, 255, 255, 0.02)";
+  Chart.defaults.global.legend.display = false;
 
-//   // Start chart
-//   var chart = document.getElementById("myChart");
-//   Chart.defaults.global.animation.duration = 2000; // Animation duration
-//   Chart.defaults.global.title.display = false; // Remove title
-//   Chart.defaults.global.title.text = "Chart"; // Title
-//   Chart.defaults.global.title.position = "bottom"; // Title position
-//   Chart.defaults.global.defaultFontColor = "#999"; // Font color
-//   Chart.defaults.global.defaultFontSize = 10; // Font size for every label
+  $("#dashb").click(() => {
+    $.ajax({
+      url: "/admin/dashboardData",
+      method: "get",
+      success: (responses) => {
+        console.log("vannumone", responses);
+        let response = responses.success
+        let cancel = responses.canceled
+        console.log("varoooo", response);
+        console.log("cancell", cancel);
 
-//   // Chart.defaults.global.tooltips.backgroundColor = '#FFF'; // Tooltips background color
-//   Chart.defaults.global.tooltips.borderColor = "white"; // Tooltips border color
-//   Chart.defaults.global.legend.labels.padding = 0;
-//   Chart.defaults.scale.ticks.beginAtZero = true;
-//   Chart.defaults.scale.gridLines.zeroLineColor = "rgba(255, 255, 255, 0.1)";
-//   Chart.defaults.scale.gridLines.color = "rgba(255, 255, 255, 0.02)";
-//   Chart.defaults.global.legend.display = false;
+        let array = [];
+        let successOrder = [];
+        let success = [];
+        response.forEach((datas) => {
+          console.log("nnnnnnnnnnnnnnnnnnn", datas.data.day);
+          if (array != datas.data.day) {
+            success.push((datas.data.status = "Order Confirme"));
+            array.push(datas.data.day);
+            successOrder.push(datas.count);
+          }
+        });
 
-//   var myChart = new Chart(chart, {
-    
-//     type: "bar",
-//     data: {
-//       labels: [
-//         "Monday",
-//         "Tuesday",
-//         "Wednesday",
-//         "Thursday",
-//         "Friday",
-//         "Saturday",
-//         "Sunday",
-//       ],
-//       datasets: [
-//         {
-//           label: "Lost",
-//           fill: false,
-//           lineTension: 0,
-//           data: [45, 25, 40, 20, 45, 20, 90],
-//           pointBorderColor: "#4bc0c0",
-//           borderColor: "#4bc0c0",
-//           borderWidth: 2,
-//           showLine: true,
-//         },
-//         {
-//           label: "Succes",
-//           fill: false,
-//           lineTension: 0,
-//           startAngle: 2,
-//           data: [20, 40, 20, 45, 25, 60, 90],
-//           // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
-//           backgroundColor: "transparent",
-//           pointBorderColor: "#ff6384",
-//           borderColor: "#ff6384",
-//           borderWidth: 2,
-//           showLine: true,
-//         },
-//       ],
-//     },
-//   });
+        let cancelItem = []
+        cancel.forEach((cancelOrder) => {
+          cancelItem.push(cancelOrder.count)
+        })
 
-//   //  Chart ( 2 )
-//   var Chart2 = document.getElementById("myChart2").getContext("2d");
-//   var chart = new Chart(Chart2, {
-//     type: "line",
-//     data: {
-//       labels: [
-//         "January",
-//         "February",
-//         "March",
-//         "April",
-//         "test",
-//         "test",
-//         "test",
-//         "test",
-//       ],
-//       datasets: [
-//         {
-//           label: "My First dataset",
-//           backgroundColor: "rgb(255, 99, 132)",
-//           borderColor: "rgb(255, 79, 116)",
-//           borderWidth: 2,
-//           pointBorderColor: false,
-//           data: [5, 10, 5, 8, 20, 30, 20, 10],
-//           fill: false,
-//           lineTension: 0.4,
-//         },
-//         {
-//           label: "Month",
-//           fill: false,
-//           lineTension: 0.4,
-//           startAngle: 2,
-//           data: [20, 14, 20, 25, 10, 15, 25, 10],
-//           // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
-//           backgroundColor: "transparent",
-//           pointBorderColor: "#4bc0c0",
-//           borderColor: "#4bc0c0",
-//           borderWidth: 2,
-//           showLine: true,
-//         },
-//         {
-//           label: "Month",
-//           fill: false,
-//           lineTension: 0.4,
-//           startAngle: 2,
-//           data: [40, 20, 5, 10, 30, 15, 15, 10],
-//           // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
-//           backgroundColor: "transparent",
-//           pointBorderColor: "#ffcd56",
-//           borderColor: "#ffcd56",
-//           borderWidth: 2,
-//           showLine: true,
-//         },
-//       ],
-//     },
+        console.log("array", array);
+        console.log("total", successOrder);
+        console.log("success", success);
+        let day = $("#day").val();
+        let total = $("#total").val();
+        let count = $("#count").val();
+        let length = Object.keys(response).length;
 
-//     // Configuration options
-//     options: {
-//       title: {
-//         display: false,
-//       },
-//     },
-//   });
+        var myChart = new Chart(chart, {
+          type: "bar",
+          data: {
+            labels: array,
 
-//   var chart = document.getElementById("chart3");
-//   var myChart = new Chart(chart, {
-//     type: "line",
-//     data: {
-//       labels: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"],
-//       datasets: [
-//         {
-//           label: "Lost",
-//           fill: false,
-//           lineTension: 0.5,
-//           pointBorderColor: "transparent",
-//           pointColor: "white",
-//           borderColor: "#d9534f",
-//           borderWidth: 0,
-//           showLine: true,
-//           data: [0, 40, 10, 30, 10, 20, 15, 20],
-//           pointBackgroundColor: "transparent",
-//         },
-//         {
-//           label: "Lost",
-//           fill: false,
-//           lineTension: 0.5,
-//           pointColor: "white",
-//           borderColor: "#5cb85c",
-//           borderWidth: 0,
-//           showLine: true,
-//           data: [40, 0, 20, 10, 25, 15, 30, 0],
-//           pointBackgroundColor: "transparent",
-//         },
-//         {
-//           label: "Lost",
-//           fill: false,
-//           lineTension: 0.5,
-//           pointColor: "white",
-//           borderColor: "#f0ad4e",
-//           borderWidth: 0,
-//           showLine: true,
-//           data: [10, 40, 20, 5, 35, 15, 35, 0],
-//           pointBackgroundColor: "transparent",
-//         },
-//         {
-//           label: "Lost",
-//           fill: false,
-//           lineTension: 0.5,
-//           pointColor: "white",
-//           borderColor: "#337ab7",
-//           borderWidth: 0,
-//           showLine: true,
-//           data: [0, 30, 10, 25, 10, 40, 20, 0],
-//           pointBackgroundColor: "transparent",
-//         },
-//       ],
-//     },
-//   });
-// });
+            datasets: [
+              {
+                label: "Success",
+                fill: false,
+                lineTension: 0,
+                data: successOrder,
+                pointBorderColor: "#4bc0c0",
+                borderColor: "#4bc0c0",
+                borderWidth: 2,
+                showLine: true,
+              },
+              {
+                label: "Canceled",
+                fill: false,
+                lineTension: 0,
+                startAngle: 2,
+                data: cancelItem,
+                // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
+                backgroundColor: "transparent",
+                pointBorderColor: "#ff6384",
+                borderColor: "#ff6384",
+                borderWidth: 2,
+                showLine: true,
+              },
+            ],
+          },
+        });
+      },
+    });
+  });
+
+  //  Chart ( 2 )
+  var Chart2 = document.getElementById("myChart2").getContext("2d");
+  var chart = new Chart(Chart2, {
+    type: "line",
+    data: {
+      labels: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "test",
+        "test",
+        "test",
+        "test",
+      ],
+      datasets: [
+        {
+          label: "My First dataset",
+          backgroundColor: "rgb(255, 99, 132)",
+          borderColor: "rgb(255, 79, 116)",
+          borderWidth: 2,
+          pointBorderColor: false,
+          data: [5, 10, 5, 8, 20, 30, 20, 10],
+          fill: false,
+          lineTension: 0.4,
+        },
+        {
+          label: "Month",
+          fill: false,
+          lineTension: 0.4,
+          startAngle: 2,
+          data: [20, 14, 20, 25, 10, 15, 25, 10],
+          // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
+          backgroundColor: "transparent",
+          pointBorderColor: "#4bc0c0",
+          borderColor: "#4bc0c0",
+          borderWidth: 2,
+          showLine: true,
+        },
+        {
+          label: "Month",
+          fill: false,
+          lineTension: 0.4,
+          startAngle: 2,
+          data: [40, 20, 5, 10, 30, 15, 15, 10],
+          // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
+          backgroundColor: "transparent",
+          pointBorderColor: "#ffcd56",
+          borderColor: "#ffcd56",
+          borderWidth: 2,
+          showLine: true,
+        },
+      ],
+    },
+
+    // Configuration options
+    options: {
+      title: {
+        display: false,
+      },
+    },
+  });
+
+  var chart = document.getElementById("chart3");
+  var myChart = new Chart(chart, {
+    type: "line",
+    data: {
+      labels: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"],
+      datasets: [
+        {
+          label: "Lost",
+          fill: false,
+          lineTension: 0.5,
+          pointBorderColor: "transparent",
+          pointColor: "white",
+          borderColor: "#d9534f",
+          borderWidth: 0,
+          showLine: true,
+          data: [0, 40, 10, 30, 10, 20, 15, 20],
+          pointBackgroundColor: "transparent",
+        },
+        {
+          label: "Lost",
+          fill: false,
+          lineTension: 0.5,
+          pointColor: "white",
+          borderColor: "#5cb85c",
+          borderWidth: 0,
+          showLine: true,
+          data: [40, 0, 20, 10, 25, 15, 30, 0],
+          pointBackgroundColor: "transparent",
+        },
+        {
+          label: "Lost",
+          fill: false,
+          lineTension: 0.5,
+          pointColor: "white",
+          borderColor: "#f0ad4e",
+          borderWidth: 0,
+          showLine: true,
+          data: [10, 40, 20, 5, 35, 15, 35, 0],
+          pointBackgroundColor: "transparent",
+        },
+        {
+          label: "Lost",
+          fill: false,
+          lineTension: 0.5,
+          pointColor: "white",
+          borderColor: "#337ab7",
+          borderWidth: 0,
+          showLine: true,
+          data: [0, 30, 10, 25, 10, 40, 20, 0],
+          pointBackgroundColor: "transparent",
+        },
+      ],
+    },
+  });
+});

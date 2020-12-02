@@ -508,12 +508,17 @@ module.exports = {
               fulldate: {
                 $gt: days,
               },
-              status: "placed",
+              // day: "Thursday",
+              status: "Order Confirme",
             },
           },
           {
             $group: {
-              _id: null,
+              _id: {
+                month: { $month: "$fulldate" },
+                day: { $dayOfMonth: "$fulldate" },
+                year: { $year: "$fulldate" },
+              },
               count: { $sum: 1 },
               total: { $sum: "$total" },
               data: {
@@ -549,14 +554,19 @@ module.exports = {
               fulldate: {
                 $gt: days,
               },
+              // day: "Thursday",
               status: "Order Canceled",
             },
           },
           {
             $group: {
-              _id: null,
+              _id: {
+                month: { $month: "$fulldate" },
+                day: { $dayOfMonth: "$fulldate" },
+                year: { $year: "$fulldate" },
+              },
               count: { $sum: 1 },
-              toatal: { $sum: "$total" },
+              total: { $sum: "$total" },
               data: {
                 $push: {
                   orderId: "$_id",
@@ -575,8 +585,11 @@ module.exports = {
         .toArray()
         .then((data) => {
           resolve(data);
-          console.log("qqqqqqqqqqqqqqqqqqqqqqq", data);
         });
     });
   },
+
+  generateCode: () => {
+    
+  }
 };

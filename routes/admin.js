@@ -34,11 +34,14 @@ router.get("/", async function (req, res, next) {
   }
 });
 
-router.post("/dashboardData", (req, res) => {
-  adminHelpers.getSuccess().then((response) => {
-    res.json(response)
-  })
-})
+router.get("/dashboardData", (req, res) => {
+  adminHelpers.getCanceled().then((canceled) => {
+    adminHelpers.getSuccess().then((success) => {
+      console.log("varunnnnnnnnn", canceled);
+      res.json({success: success, canceled: canceled});
+    });
+  });
+});
 
 router.get("/view-users", (req, res) => {
   adminHelpers.viewUser().then((users) => {
@@ -331,11 +334,17 @@ router.get("/salesreport", (req, res) => {
   res.render("admin/salesReport", { admin: true });
 });
 
-router.get("/test", (req, res) => {
+router.get("/coupen", (req, res) => {
   adminHelpers.getSuccess().then((response) => {
     console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhh", response);
-    res.render("admin/voucherManagement");
+    res.render("admin/voucherManagement", {admin: true  });
   });
 });
+
+router.post("/generateCode", (req, res) => {
+  adminHelpers.generateCode().then((response) => {
+    
+  })
+})
 
 module.exports = router;
