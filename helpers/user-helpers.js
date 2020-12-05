@@ -10,7 +10,7 @@ let moment = require("moment");
 let format2 = "YYYY-MM-DD";
 const cucumber = require("@cucumber/cucumber");
 const { promises } = require("dns");
-const referralCodeGenerator = require("referral-code-generator")
+const referralCodeGenerator = require("referral-code-generator");
 
 var instance = new Razorpay({
   key_id: "rzp_test_CyyEWbJn9u0YOv",
@@ -32,7 +32,12 @@ module.exports = {
           if (result.length != 0) {
             resolve({ status: null });
           } else {
-            userData.referral = referralCodeGenerator.custom('lowercase', 6, 6, 'temitope');
+            userData.referral = referralCodeGenerator.custom(
+              "lowercase",
+              6,
+              6,
+              "temitope"
+            );
             userData.password = await bcrypt.hash(userData.password, 10);
             db.get()
               .collection(collection.USER_COLLECTION)
@@ -267,8 +272,6 @@ module.exports = {
           },
           {
             $group: {
-              // _id: null,
-              // total: {$sum: {$multiply: ['$quantity', '$product.price']}},
               _id: "null",
               total: { $sum: { $multiply: ["$quantity", "$product.price"] } },
             },
@@ -660,9 +663,9 @@ module.exports = {
         .findOne({ mobile: number })
         .then((details) => {
           if (details != null) {
-            resolve({details: details});
+            resolve({ details: details });
           } else {
-            resolve({details: null});
+            resolve({ details: null });
           }
         });
     });
@@ -670,19 +673,74 @@ module.exports = {
 
   getOneUser: (mobileNum) => {
     return new Promise((resolve, reject) => {
-      db.get().collection(collection.USER_COLLECTION)
-      .findOne({mobile: mobileNum}).then((response) => {
-        resolve(response)
-      })
-    })
-  }, 
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .findOne({ mobile: mobileNum })
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
 
   checkUserBlock: (userId) => {
     return new Promise((resolve, reject) => {
-      db.get().collection(collection.USER_COLLECTION)
-      .findOne({_id: objectId(userId)}).then((response) => {
-        resolve(response)
-      })
-    })
-  }
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .findOne({ _id: objectId(userId) })
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+
+  checkVoucher: (voucher) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.COUPON_COLLECTION)
+        .findOne({ voucher: voucher })
+        .then((response) => {
+          console.log("qqqqqqqqqqqqqqq", response);
+          if (response) {
+            resolve({ status: true, result: response });
+          } else {
+            resolve({ status: false });
+          }
+        });
+    });
+  },
+
+  addUsedCoupons: (coupon, userId) => {
+    return new Promise((resolve, reject) => {
+      let usedcoupons = {
+        coupon,
+      };
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .update({ _id: objectId(userId) }, { $push: { usedcoupons: coupon } });
+    });
+  },
+
+  checkCoupon: (coupon, userId) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .aggregate([
+          {
+            $match: {
+              _id: objectId(userId),
+            },
+          },
+        ])
+        .toArray()
+        .then((response) => {
+          let coupons = response[0].usedcoupons;
+          let data = coupons.filter(value => value == coupon)
+          if (data == 0) {
+            resolve({ status: true });
+          } else {
+            resolve({ status: false });
+          }
+        });
+    });
+  },
 };

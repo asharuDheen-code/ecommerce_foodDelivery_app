@@ -176,11 +176,23 @@ router.get("/place-order", varifyLogin, async (req, res) => {
     });
 });
 
+router.get("/test", (req, res) => {
+  let userId = "5fc47c005639194494e6f3c0";
+  let coupon = "O1elwQ3V";
+  userHelpers.checkCoupon(coupon, userId).then((result) => {
+    console.log("vannu", result);
+    res.json(resu);
+  });
+});
+
 router.post("/place-order", async (req, res) => {
+  console.log("vvvvvvvvvvvvvvvvvvvv", req.body.appliedcoupon);
   const obj = JSON.parse(JSON.stringify(req.body));
   let products = await userHelpers.getCartProductList(req.body.userId);
   let totalPrice = await userHelpers.getTotalAmount(req.body.userId);
-  userHelpers.placeOrder(req.body, products, totalPrice).then((response) => {
+  let total = req.body.total;
+  userHelpers.addUsedCoupons(req.body.appliedcoupon, req.body.userId);
+  userHelpers.placeOrder(req.body, products, total).then((response) => {
     if (req.body["paymentMethod"] === "COD") {
       res.json({ success: response.id });
     } else if (req.body["paymentMethod"] === "RazorPay") {
@@ -250,10 +262,6 @@ router.get("/view-order-products/:id", varifyLogin, async (req, res) => {
     user: req.session.user,
     order,
   });
-});
-
-router.get("/test", (req, res) => {
-  res.render("admin/test");
 });
 
 router.post("/addAddress", varifyLogin, (req, res) => {
@@ -393,4 +401,24 @@ router.post("/otpVerify", (req, res) => {
 });
 // END OTP Varification
 
+//***********User Voucher************//
+
+router.post("/checkVoucher", (req, res) => {
+  let userId = req.session.user._id;
+  let voucherCode = req.body.voucher;
+  let total = parseInt(req.body.totalamount);
+
+  userHelpers.checkCoupon(voucherCode, userId).then((usercoupon) => {
+    userHelpers.checkVoucher(voucherCode).then((result) => {
+      let status = usercoupon.status
+      if (usercoupon.status && result.status) {
+        res.json({ values: result, total: total });
+      } else {
+        res.json({ values: status  });
+      }
+    });
+  });
+});
+
+//***********END User Voucher************//
 module.exports = router;

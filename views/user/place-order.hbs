@@ -1,6 +1,11 @@
 <link rel="stylesheet" href="/stylesheets/place-order.css">
 <link rel="stylesheet" href="/stylesheets/popup.css">
 
+<style>
+    .dropdown {
+        margin-top: -8px;
+    }
+</style>
 
 <section class="" style="padding-top: 30px;">
     <div class="container">
@@ -30,7 +35,7 @@
                         <label>
                             <span>Email Address <span class="required">*</span></span>
                             <input id="email" value="" type="email" name="email">
-                            <input type="text" name="userId" value="{{user._id}}" hidden>
+                            <input type="text" id="userId" name="userId" value="{{user._id}}" hidden>
                         </label>
                         <div class="checkBtn">
                             <form class="checkBox" action="#">
@@ -119,7 +124,7 @@
                             </tr>
                             <tr>
                                 <td>Subtotal</td>
-                                <td>₹{{total}}</td>
+                                <td>₹<span id="subtotal">{{total}}</span></td>
                             </tr>
                             <tr>
                                 <td>Shipping</td>
@@ -127,26 +132,32 @@
                             </tr>
                         </table><br>
                         <div>
-                            <input type="radio" name="paymentMethod" value="COD"> COD
+                            <input type="radio" id="paymentMethod" name="paymentMethod" value="COD"> COD
                         </div>
                         <div>
-                            <input type="radio" name="paymentMethod" value="RazorPay"> RazorPay <span>
+                            <input type="radio" id="paymentMethod" name="paymentMethod" value="RazorPay"> RazorPay
+                            <span>
                                 <img src="https://www.logolynx.com/images/logolynx/c3/c36093ca9fb6c250f74d319550acac4d.jpeg"
                                     alt="" width="50">
                             </span>
                         </div>
                         <div>
-                            <input type="radio" name="paymentMethod" value="PayPal"> PayPal <span>
+                            <input type="radio" id="paymentMethod" name="paymentMethod" value="PayPal"> PayPal <span>
                                 <img src="https://www.logolynx.com/images/logolynx/c3/c36093ca9fb6c250f74d319550acac4d.jpeg"
                                     alt="" width="50">
                             </span>
                         </div>
                         <div style="display: flex;">
                             <div style="padding-top: 20px;">
-                                <input type="text" placeholder="Use Your Voucher" style="font-family: revert; width: 177px; border-radius: 5px;">
+                                <input id="userVoucher" type="text" placeholder="Use Your Voucher"
+                                    style="font-family: revert; width: 177px; border-radius: 5px;">
+                                <h4 id="notvalid"
+                                    style="font-size: 14px; text-align: center; color: red; display: none;">not a valid
+                                    coupon !</h4>
                             </div>
                             <div style="padding-top: 20px;">
-                                <button class="btn btn-success" style="width: 65px; padding: 0; height: 30px; "><span>Apply</span></button>
+                                <button type="button" id="voucherApply" class="btn btn-success"
+                                    style="width: 65px; padding: 0; height: 30px; "><span>Apply</span></button>
                             </div>
                         </div>
                         <div id="paypal-button-container" class="" style="display: flex; width: 100%;"></div>
@@ -171,6 +182,7 @@
 
 <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 <script src="/javascripts/popup.js"></script>
+<script src="/javascripts/user/voucher.js"></script>
 <script src="js/index.js"></script>
 
 <script>
@@ -210,11 +222,31 @@
 <script>
 
     $('#checkout-form').submit((e) => {
+        let total = $('#subtotal').html()
+        let fname = $('#fname').val()
+        let lname = $('#lname').val()
+        let address = $('#address').val()
+        let mobile = $('#mobile').val()
+        let email = $('#email').val()
+        let userId = $('#userId').val()
+        let appliedcoupon = $('#userVoucher').val()
+        let paymentMethod = $('#paymentMethod').val()
+
         e.preventDefault()
         $.ajax({
             url: '/place-order',
             method: 'post',
-            data: $('#checkout-form').serialize(), // SERIALIZE Geting all data from a form
+            data: {
+                fname,
+                lname,
+                address,
+                mobile,
+                email,
+                userId,
+                paymentMethod,
+                appliedcoupon,
+                total,
+            },  // SERIALIZE Geting all data from a form
             success: (response) => {
                 if (response.success) {
                     let id = response.success

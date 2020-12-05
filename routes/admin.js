@@ -7,6 +7,7 @@ var productHelper = require("../helpers/product-helpers");
 var base64ToImage = require("base64-to-image");
 const { categories } = require("../helpers/admin-helpers");
 const { route, render } = require("../app");
+var voucher_codes = require("voucher-code-generator");
 
 const adminUser = "a";
 const adminPassword = "a";
@@ -38,7 +39,7 @@ router.get("/dashboardData", (req, res) => {
   adminHelpers.getCanceled().then((canceled) => {
     adminHelpers.getSuccess().then((success) => {
       console.log("varunnnnnnnnn", canceled);
-      res.json({success: success, canceled: canceled});
+      res.json({ success: success, canceled: canceled });
     });
   });
 });
@@ -334,17 +335,35 @@ router.get("/salesreport", (req, res) => {
   res.render("admin/salesReport", { admin: true });
 });
 
-router.get("/coupen", (req, res) => {
-  adminHelpers.getSuccess().then((response) => {
-    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhh", response);
-    res.render("admin/voucherManagement", {admin: true  });
+//************Voucher Managment*************/
+
+router.get("/voucher", (req, res) => {
+  adminHelpers.getVoucherData().then((coupons) => {
+    console.log(coupons);
+    res.render("admin/voucherManagement", { admin: true, coupons });
   });
 });
 
-router.post("/generateCode", (req, res) => {
-  adminHelpers.generateCode().then((response) => {
-    
-  })
-})
+router.get("/generateCode", (req, res) => {
+  console.log("called");
+  let voucherCode = voucher_codes.generate({
+    length: 8,
+    count: 1,
+  });
+  let voucher = voucherCode[0]
+  console.log("oooooook", voucher);
+  res.json(voucher)
+  // adminHelpers.generateCode().then((response) => {});
+});
+
+router.post("/addVoucher", (req, res) => {
+  let voucherDatas = req.body;
+  console.log("ppppppppppppf", voucherDatas);
+  adminHelpers.addVoucher(voucherDatas).then((response) => {
+    res.render("admin/voucherManagement", { admin: true });
+  });
+});
+
+//************End Voucher Managment*************/
 
 module.exports = router;

@@ -5,7 +5,7 @@ const state = {
 };
 
 module.exports.connect = function (done /*its a call back */) {
-  const url = "mongodb://localhost:27017";
+  const url = "mongodb+srv://swissknife:20lakh@Twoyear@cluster0.d69jt.mongodb.net/swissKnife?retryWrites=true&w=majority";
   const dbname = "newShop";
 
   mongoClient.connect(url, (err, data) => {

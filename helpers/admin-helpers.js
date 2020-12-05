@@ -4,6 +4,7 @@ var collection = require("../config/collections");
 var objectId = require("mongodb").ObjectID;
 const bcrypt = require("bcrypt"); /* <= bcrypting Password  */
 const { response } = require("express");
+var voucher_codes = require("voucher-code-generator");
 
 module.exports = {
   adduser: (userData) => {
@@ -589,7 +590,24 @@ module.exports = {
     });
   },
 
-  generateCode: () => {
-    
+  addVoucher: (voucherDetails) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.COUPON_COLLECTION)
+        .insertOne(voucherDetails)
+        .then((response) => {
+          resolve(response);
+        });
+    });
+  },
+
+  getVoucherData: () => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.COUPON_COLLECTION)
+      .find().toArray()
+      .then((coupons) => {
+        resolve(coupons)
+      })
+    })
   }
 };
