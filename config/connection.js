@@ -5,10 +5,10 @@ const state = {
 };
 
 module.exports.connect = function (done /*its a call back */) {
-  const url = "mongodb+srv://swissknife:20lakh@Twoyear@cluster0.d69jt.mongodb.net/swissKnife?retryWrites=true&w=majority";
+  const url = "mongodb+srv://swissknife:20lakh@Twoyear@cluster0.d69jt.mongodb.net/newShop?retryWrites=true&w=majority";
   const dbname = "newShop";
 
-  mongoClient.connect(url, (err, data) => {
+  mongoClient.connect(url, { useUnifiedTopology: true }, (err, data) => {
     if (err) return done(err);
     state.db = data.db(dbname);
     done();

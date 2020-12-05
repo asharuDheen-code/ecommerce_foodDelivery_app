@@ -38,7 +38,7 @@ router.get("/", async function (req, res, next) {
 router.get("/dashboardData", (req, res) => {
   adminHelpers.getCanceled().then((canceled) => {
     adminHelpers.getSuccess().then((success) => {
-      console.log("varunnnnnnnnn", canceled);
+      console.log("oarunnnnnnnnn", canceled);
       res.json({ success: success, canceled: canceled });
     });
   });
